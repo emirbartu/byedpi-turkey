@@ -79,8 +79,8 @@ dns-none() {
     echo "networkmanager dns-none ayarlaniyor..."
     echo "Lutfen sudo sifresi istenirse girin."
 
-    echo "Dosya yaziliyor: $DNS_NONE"
-    sudo tee "$DNS_NONE" > /dev/null << 'EOF'
+echo "Dosya yaziliyor: $DNS_NONE"
+sudo tee "$DNS_NONE" > /dev/null << 'EOF'
 [main]
 dns=none
 EOF 
