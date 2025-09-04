@@ -8,7 +8,7 @@ Kullanici dostu, Linux icin GoodbyeDPI-Turkey alternatifi.
 > [!WARNING]
 > Tamamen egitim amacli yapilmis bir projedir.
 
-> [!INFO]
+> [!NOTE]
 > Simdilik sadece Arch Linux icin gecerlidir.
 > Fedora destegi zamanla eklenecektir.
 > Ubuntu / Debian destegi planlanmamaktadir.
