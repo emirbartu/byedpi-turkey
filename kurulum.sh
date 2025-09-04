@@ -83,7 +83,7 @@ echo "Dosya yaziliyor: $DNS_NONE"
 sudo tee "$DNS_NONE" > /dev/null << 'EOF'
 [main]
 dns=none
-EOF 
+EOF
 }
 
 resolv-conf() {
