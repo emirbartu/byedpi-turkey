@@ -48,7 +48,7 @@ cmd_tun() {
 cmd_zenity() {
   cmd=$(
     zenity --list --title="$NAME" --hide-header --column="0" \
-      "Tunnel - Start" "Tunnel - Stop" "Tunnel - Restart"
+      "ByeDPI'i Baslat" "ByeDPI'i Durdur" "ByeDPI'i Yeniden Baslat"
   )
 
   reply=""

@@ -3,6 +3,7 @@
 set -e
 
 iss=""
+DNS_NONE="/etc/NetworkManager/conf.d/90-dns-none.conf"
 
 echo "Bu kurulum dosyasi once Dnscrypt proxy kurulumu yapacak,"
 echo "Ardindan ise byedpictl kurulumu yapip internet servis saglayiciniza gore duzenleyecektir."
@@ -64,11 +65,14 @@ else
     exit 1
 fi
 
-
 echo "networkmanager dns-none ayarlaniyor..."
 echo "Lutfen sudo sifresi istenirse girin."
 
-sudo cp configs/90-dns-none.conf /etc/NetworkManager/conf.d/90-dns-none.conf
+echo "Dosya yaziliyor: $DNS_NONE"
+sudo tee "$DNS_NONE" > /dev/null << 'EOF'
+[main]
+dns=none
+EOF
 
 echo "resolv.conf dosyasi guncelleniyor..."
 echo "UYARI: mevcut resolv.conf dosyasinin uzerine yazilacaktir. Orijinal resolv.conf yedekleniyor..."
@@ -83,11 +87,11 @@ sudo cp configs/dnscrypt-proxy.toml /etc/dnscrypt-proxy/dnscrypt-proxy.toml
 echo "dnscrypt-proxy'i dogru sekilde kullanmak icin masaustu ortaminizin ayarlarindan dns'i 127.0.0.1 olarak ayarlamalisiniz."
 echo "nasil yapilacagini bilmiyorsaniz rehber videosuna bakabilirsiniz."
 
-echo "dnscrypt-proxy konfigure edildi. Servisler baslatiliyor."
+echo "Servisler baslatiliyor."
 sudo systemctl enable dnscrypt-proxy.service
 sudo systemctl start dnscrypt-proxy.service
 
-echo "dnscrypt-proxdy kurulumu ve konfigrasyonu tamamen tamamlandi. byedpi kurulumuna geciliyor..."
+echo "dnscrypt-proxy kurulumu ve konfigrasyonu tamamen tamamlandi. byedpi kurulumuna geciliyor..."
 
 if [ "$iss" = "superonline" ]; then
     echo "byedpictl superonline kurulum scripti calistiriliyor..."
