@@ -91,10 +91,10 @@ echo "dnscrypt-proxdy kurulumu ve konfigrasyonu tamamen tamamlandi. byedpi kurul
 
 if [ "$iss" = "superonline" ]; then
     echo "byedpictl superonline kurulum scripti calistiriliyor..."
-    /bin/bash make-superonline.sh
+    /bin/bash sudo make-superonline.sh
 elif [ "$iss" = "diger" ]; then
     echo "byedpictl kurulum scripti calistiriliyor..."
-    /bin/bash make.sh
+    /bin/bash sudo make.sh
 fi
 
 echo "ByeDPI kuruldu. Sisteminizden byedpictl uygulamasini acarak aktiflestirebilirsiniz."
