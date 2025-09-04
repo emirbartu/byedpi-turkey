@@ -1,85 +1,39 @@
-# byedpictl
-Experimental utility for user-friendly DPI desync on Linux. Supports both
-command-line and graphical interfaces.
+# byedpi-turkey
 
-Uses [byedpi](https://github.com/hufrea/byedpi) for processing and
-[hev-socks5-tunnel](https://github.com/heiher/hev-socks5-tunnel) for network
-tunneling.
+Kullanici dostu, Linux icin GoodbyeDPI-Turkey alternatifi.
 
-Still in the progress of early development, so there are no stable releases
-yet.
+> [!WARNING]
+> Projeyi kullanmak tamamen sizin sorumlulugunuzdadir.
 
+> [!WARNING]
+> Tamamen egitim amacli yapilmis bir projedir.
 
-## Install
-1. Download the
-   [latest archive](https://github.com/maximilionus/byedpictl/archive/refs/heads/master.zip)
-   and unpack it.
-2. In the unpacked directory run:
-   ```sh
-   $ sudo ./make.sh install
-   ```
+> [!INFO]
+> Simdilik sadece Arch Linux icin gecerlidir.
+> Fedora destegi zamanla eklenecektir.
+> Ubuntu / Debian destegi planlanmamaktadir.
 
-## Remove
-1. Use the same `make.sh` script to remove the project:
-   ```sh
-   $ sudo ./make.sh remove
-   ```
+Arkaplanda [dnscrypt-proxy](https://github.com/DNSCrypt/dnscrypt-proxy) ve [byedpictl](https://github.com/maximilionus/byedpictl) kullanir, byedpictl dolayisi ile [byedpi](https://github.com/hufrea/byedpi) ve [hev-socks5-tunnel](https://github.com/heiher/hev-socks5-tunnel) de kullanilir.
 
-## Update
-1. Be sure to uninstall the project using the same `make.sh` script that was
-   used for initial installation.
-2. Follow the "Install" section above with new version.
+# Kurulum
 
-## Usage
-### Command Line
-Get all the available information about utility commands usage with:
-```sh
-$ byedpictl help
+eklenecek
+
+# Muhtemel Sorunlar / Sorular
+
+- Tunelleme, sistem uykudan kalktiktan sonra bozulabilir. Uygulama uzerinden bir defa yeniden baslatmak sorunu cozer.
+
+- Sistem her acildiginda uygulama veya komut satiri uzerinden yeniden acmalisiniz. Herkes icin uygun bir cozum bulundugunda eklenecektir.
+
+# Komut Satiri
+
+- ``byedpictl``'in tum komutlari kullanilabilir.
 ```
+byedpictl help
+byedpictl tun start
+byedpictl tun stop
+byedpictl tun restart
+byedpictl tun status
 
-#### Tunneling
-Control the background tunneling.
-
-- Start and stop the tunneling with:
-  ```sh
-  # Start
-  $ byedpictl tun start
-
-  # Stop
-  $ byedpictl tun stop
-  ```
-
-- Get status of background tunneling with:
-  ```sh
-  $ byedpictl tun status
-  ```
-
-
-### Graphical Interface
-This project also supports a GUI mode (based on Zenity) for some basic
-interactions, like starting/stopping the tunneling and so on. A desktop entry
-will be created on initial project installation and can be accessed on any
-XDG-compliant desktop environment to start the graphical menu.
-
-To run the graphical interface on the target system, `zenity` must be
-installed. Most distributions provide it out of the box.
-
-
-## Configuration
-DPI desync (bypass) approaches can be modified by altering the contents of
-`/etc/byedpictl/desync.conf` file.
-
-
-## Debugging
-Logs are available in `/var/log/byedpictl` directory.
-
-
-## Possible issues
-
-### Tunnel after suspend
-Tunneling **will** break after waking machine from suspend (sleep) state. To
-restore the functionality you should restart the tunnel with the command below:
-
-```sh
-$ byedpictl tun restart
+byedpictl zenity # grafik arayuzunu acar
 ```
