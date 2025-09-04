@@ -21,6 +21,8 @@ eklenecek
 
 # Muhtemel Sorunlar / Sorular
 
+- Sisteminizin interneti giderse bir defa byedpictl'den yeniden baslatmak sorunu cozecektir. Bazen tunnel calisirken server cokebiliyor. Bunu ``sudo byedpictl tun status`` yazarak kontrol edebilirsiniz.
+
 - Tunelleme, sistem uykudan kalktiktan sonra bozulabilir. Uygulama uzerinden bir defa yeniden baslatmak sorunu cozer.
 
 - Sistem her acildiginda uygulama veya komut satiri uzerinden yeniden acmalisiniz. Herkes icin uygun bir cozum bulundugunda eklenecektir.
