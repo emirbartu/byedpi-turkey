@@ -74,6 +74,7 @@ acikla() {
 }
 
 iss-check() {
+  echo
   read -p "Internet servis saglayiciniz superonline mi? (evet/hayir): " cevap
   cevap=$(echo "$cevap" | tr '[:upper:]' '[:lower:]')
 

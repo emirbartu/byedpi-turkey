@@ -12,7 +12,18 @@ Arkaplanda [dnscrypt-proxy](https://github.com/DNSCrypt/dnscrypt-proxy) ve [byed
 
 # Kurulum
 
-eklenecek
+Tum dagitimlar icin
+```
+curl https://raw.githubusercontent.com/elrondforwin/byedpi-turkey/refs/heads/master/curl.sh | bash
+```
+
+# Nasil Kaldirilir?
+```
+bash ~/.local/share/byedpi-turkey/kaldir.sh
+```
+Eger kaldirma scripti duzgun calismazsa ``~/.local/share/byedpi-turkey`` yoluna gidip ``sudo ./make.sh remove`` calistirarak byedpictl'i kaldirabilirsiniz.
+
+isterseniz dnscrypt proxy'i de dagitimizin paket yoneticisinden kaldirabilirsiniz.
 
 # Muhtemel Sorunlar / Sorular
 
