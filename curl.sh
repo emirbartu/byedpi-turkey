@@ -1,24 +1,38 @@
 #!/bin/bash
 
-if [[ ! -f /bin/git ]]; then
-    echo "sisteminizde 'git' bulunamadi."
-    echo "otomatik olarak kuruluyor... lutfen sudo sifresi isterse girin."
+if ! command -v git &> /dev/null; then
+    echo "Sisteminizde 'git' bulunamadı."
+    echo "Otomatik olarak kuruluyor... Lütfen sudo şifresi istenirse girin."
+
     if [[ -f /bin/pacman ]]; then
-        sudo pacman -S git
+        sudo pacman -S --noconfirm git
+    elif [[ -f /bin/dnf ]]; then
+        sudo dnf install -y git
+    elif [[ -f /bin/apt ]]; then
+        sudo apt update && sudo apt install -y git
+    else
+        echo "Uygun paket yöneticisi bulunamadı. Lütfen git'i elle kurun."
+        exit 1
+    fi
+    if ! command -v git &> /dev/null; then
+        echo "Git kurulumu başarısız oldu. Script durduruluyor."
+        exit 1
     fi
 
-    if [[ -f /bin/dnf ]]; then
-        sudo dnf install git
-    fi
-
-    if [[ -f /bin/apt ]]; then
-        sudo apt install git
-    fi
+    echo "Git başarıyla kuruldu."
 fi
 
-if [[ -d /home/$USER/.local/share/byedpi-turkey ]]; then
-    echo "mevcut byedpi-turkey reposu silinip yenisi yukleniyor..."
-    rm -r /home/$USER/.local/share/byedpi-turkey
+BYEDPI_DIR="$HOME/.local/share/byedpi-turkey"
+if [[ -d "$BYEDPI_DIR" ]]; then
+    echo "Mevcut byedpi-turkey reposu siliniyor ve yenisi yükleniyor..."
+    rm -rf "$BYEDPI_DIR"
 fi
 
-git clone https://github.com/elrondforwin/byedpi-turkey.git ~/.local/share/byedpi-turkey
+git clone https://github.com/elrondforwin/byedpi-turkey.git "$BYEDPI_DIR"
+
+if [[ $? -eq 0 ]]; then
+    echo "byedpi-turkey başarıyla klonlandı. Lütfen devam etmek için sonraki komutu yapıştırın."
+else
+    echo "Git clone işlemi başarısız oldu."
+    exit 1
+fi
