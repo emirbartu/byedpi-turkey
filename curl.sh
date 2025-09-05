@@ -1,7 +1,5 @@
 #!/bin/bash
 
-set -e
-
 if [[ ! -f /bin/git ]]; then
     echo "sisteminizde 'git' bulunamadi."
     echo "otomatik olarak kuruluyor... lutfen sudo sifresi isterse girin."
