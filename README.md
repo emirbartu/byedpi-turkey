@@ -8,11 +8,6 @@ Kullanici dostu, Linux icin GoodbyeDPI-Turkey alternatifi.
 > [!WARNING]
 > Tamamen egitim amacli yapilmis bir projedir.
 
-> [!NOTE]
-> Simdilik sadece Arch Linux icin gecerlidir.
-> Fedora destegi zamanla eklenecektir.
-> Ubuntu / Debian destegi planlanmamaktadir.
-
 Arkaplanda [dnscrypt-proxy](https://github.com/DNSCrypt/dnscrypt-proxy) ve [byedpictl](https://github.com/maximilionus/byedpictl) kullanir, byedpictl dolayisi ile [byedpi](https://github.com/hufrea/byedpi) ve [hev-socks5-tunnel](https://github.com/heiher/hev-socks5-tunnel) de kullanilir.
 
 # Kurulum
