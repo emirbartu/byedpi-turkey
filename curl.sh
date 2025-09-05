@@ -2,8 +2,6 @@
 
 set -e
 
-installdir="/home/$USER/.local/share"
-
 if [[ ! -f /bin/git ]]; then
     echo "sisteminizde 'git' bulunamadi."
     echo "otomatik olarak kuruluyor... lutfen sudo sifresi isterse girin."
@@ -20,14 +18,8 @@ if [[ ! -f /bin/git ]]; then
     fi
 fi
 
-if [[ -d ${installdir}/byedpi-turkey ]]; then
-    rm -r ${installdir}/byedpi-turkey
+if [[ -d /home/$USER/.local/share/byedpi-turkey ]]; then
+    rm -r /home/$USER/.local/share/byedpi-turkey
 fi
 
-cd $installdir
-
-git clone https://github.com/elrondforwin/byedpi-turkey.git
-
-cd byedpi-turkey
-
-bash kurulum.sh
+git clone https://github.com/elrondforwin/byedpi-turkey.git ~/.local/share/byedpi-turkey
