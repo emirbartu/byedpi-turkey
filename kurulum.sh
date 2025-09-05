@@ -6,17 +6,17 @@ iss=""
 DNS_NONE="/etc/NetworkManager/conf.d/90-dns-none.conf"
 
 paket-yonetici-tanimla() {
-  if [[ -f /bin/pacman ]]; then
+if command -v pacman &> /dev/null; then
     paketyonetici="pacman -S"
     distro="arch tabanli"
   fi
 
-  if [[ -f /bin/dnf ]]; then
+if command -v dnf &> /dev/null; then
     paketyonetici="dnf install"
     distro="fedora tabanli"
   fi
 
-  if [[ -f /bin/apt ]]; then
+if command -v apt &> /dev/null; then
     paketyonetici="apt install"
     distro="debian/ubuntu tabanli"
   fi
@@ -68,8 +68,8 @@ paket-yonetici-tanimla() {
 }
 
 acikla() {
-  echo "Bu kurulum sihirbazi once Dnscrypt proxy kurulumu yapacak,"
-  echo "Ardindan ise byedpictl kurulumu yapip internet servis saglayiciniza gore duzenleyecektir."
+  echo "Bu kurulum sihirbazi dnscrypt-proxy, "
+  echo
   echo
 }
 
@@ -195,4 +195,4 @@ echo "ByeDPI kuruldu. Sisteminizden byedpictl uygulamasini acarak aktiflestirebi
 echo
 echo
 echo "ONEMLI: Sisteminizin DNS'ini 127.0.0.1 seklinde ayarlamadiginiz surece bypass calismayacaktir. Sistem ayarlarinizdan bagli oldugunuz agin dns'ini 127.0.0.1 yapmalisiniz."
-
+echo ""
