@@ -19,6 +19,7 @@ if [[ ! -f /bin/git ]]; then
 fi
 
 if [[ -d /home/$USER/.local/share/byedpi-turkey ]]; then
+    echo "mevcut byedpi-turkey reposu silinip yenisi yukleniyor..."
     rm -r /home/$USER/.local/share/byedpi-turkey
 fi
 
