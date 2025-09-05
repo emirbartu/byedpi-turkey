@@ -117,6 +117,20 @@ if [[ $paketemin =~ ^(evet|e)$ ]]; then
     paket-yonetici-tanimla
     echo "secilen paket yoneticisi ile dnscrypt-proxy paketi kaldiriliyor..."
     sudo ${paketyonetici} dnscrypt-proxy
+    if command -v nmcli &> /dev/null; then
+      aktif_ag=$(nmcli -t -f NAME connection show --active | head -n1)
+    if [ -z "$aktif_ag" ]; then
+      echo "aktif ag bulunamadi..."
+    else
+      nmcli connection modify "$aktif_ag" ipv4.dns "1.1.1.1"
+      nmcli connection modify "$aktif_ag" ipv4.ignore-auto-dns no
+      echo "${aktif_ag} aginin dns'i 1.1.1.1 olarak ayarlandi."
+      echo "network yeniden baslatiliyor..."
+      nmcli connection down "$aktif_ag" 2>/dev/null
+      sleep 1
+      nmcli connection up "$aktif_ag"
+      fi
+    fi
     echo "UYARI: zenity paketi baska uygulamalarin da calismasi icin gerekli olabileceginden betik tarafindan kaldirilmayacak."
     echo "yine de elle kaldirmak isterseniz '${paketyonetici} zenity' komutu kullanarak kaldirabilirsiniz."
 else

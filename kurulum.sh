@@ -225,7 +225,7 @@ dns-none
 resolv-conf
 dnscrypt-config
 byedpi-setup
-# dns-degis
+dns-degis
 systemd-service
 
 echo "ByeDPI kuruldu. Sisteminizden byedpictl uygulamasini acarak ilk seferde aktiflestirebilirsiniz."
