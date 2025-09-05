@@ -173,10 +173,9 @@ systemd-service() {
       echo "systemd kullaniliyor."
       echo "systemd servisi kuruluyor..."
       sudo cp configs/byedpi-start.service /etc/systemd/system/byedpi-start.service
-      sudo chmod 644 /etc/systemd/system/byedpi-start.service
-      sudo chown root:root /etc/systemd/system/byedpi-start.service
-      sleep 2
+      sleep 1
       sudo systemctl daemon-reload
+      sleep 2
       sudo systemctl enable byedpi-start.service
       sudo systemctl start byedpi-start.service
       echo

@@ -101,6 +101,11 @@ emin-misin
 if [[ $emin =~ ^(evet|e)$ ]]; then
     byedpictl-kaldir
     echo "byedpictl basariyla kaldirildi"
+    if [[ $(ps -p 1 -o comm=) == "systemd" ]]; then
+      echo "systemd tespit edildi. servis siliniyor..."
+      sudo systemctl disable byedpi-start.service
+      sudo rm -rf /etc/systemd/system/byedpi-start.service
+    fi
 else
     echo "kullanici evet cevabi vermedi. cikiliyor..."
     exit 1
