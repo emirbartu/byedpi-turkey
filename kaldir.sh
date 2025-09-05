@@ -14,7 +14,10 @@ emin-misin() {
 
 byedpictl-kaldir() {
     if [[ -f $makefile ]]; then
-        echo "byedpictl make dosyasi bulundu. kaldiriliyor..."
+        echo "byedpictl make dosyasi bulundu."
+        echo "byedpictl durduruluyor"
+        byedpictl tun stop
+        echo "byedpictl kaldiriliyor"
         sudo $makefile remove
     else
         echo "${makefile} yolunda olmasi gereken byedpictl make dosyasi bulunamadi. kurulum dosyalari bozulmus gibi gorunuyor..."
