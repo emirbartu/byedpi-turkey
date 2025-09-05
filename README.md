@@ -31,8 +31,6 @@ isterseniz dnscrypt proxy'i de dagitimizin paket yoneticisinden kaldirabilirsini
 
 - Tunelleme, sistem uykudan kalktiktan sonra bozulabilir. Uygulama uzerinden bir defa yeniden baslatmak sorunu cozer.
 
-- Sistem her acildiginda uygulama veya komut satiri uzerinden yeniden acmalisiniz. Herkes icin uygun bir cozum bulundugunda eklenecektir.
-
 # Komut Satiri
 
 - ``byedpictl``'in tum komutlari kullanilabilir.
