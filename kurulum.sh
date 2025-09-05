@@ -195,4 +195,5 @@ echo "ByeDPI kuruldu. Sisteminizden byedpictl uygulamasini acarak aktiflestirebi
 echo
 echo
 echo "ONEMLI: Sisteminizin DNS'ini 127.0.0.1 seklinde ayarlamadiginiz surece bypass calismayacaktir. Sistem ayarlarinizdan bagli oldugunuz agin dns'ini 127.0.0.1 yapmalisiniz."
-echo ""
+echo
+echo "ONEMLI: Kurulum tamamlanmis olsa da sisteminize eklenen byedpictl uygulamasina gidip bir kez byedpi'i baslatmaniz gerekmektedir. Bunu sistem her acildiginda yapmalisiniz. Herkes icin uygun bir cozum bulundugunda otomatik baslatma eklenecektir."
