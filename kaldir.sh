@@ -117,5 +117,6 @@ if [[ $paketemin =~ ^(evet|e)$ ]]; then
 else
     echo "dnscrypt-proxy kaldirilmayacak"
 fi
-
+echo
+echo "BILGI: isterseniz ~/.local/share/byedpi-turkey repo klasorunu de elinizle kaldirabilirsiniz."
 echo "betik basariyla tamamlandi"
