@@ -177,8 +177,8 @@ systemd-service() {
       sudo chown root:root /etc/systemd/system/byedpi-start.service
       sleep 2
       sudo systemctl daemon-reload
-      sudo systemctl enable byedpictl-start.service
-      sudo systemctl start byedpictl-start.service
+      sudo systemctl enable byedpi-start.service
+      sudo systemctl start byedpi-start.service
       echo
       echo "sistemin basinda acilmasini saglayan systemd servisini 'sudo systemctl enable/disable byedpictl-start' yazarak kontrol edebilirsiniz"
   else
