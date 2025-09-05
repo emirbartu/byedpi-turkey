@@ -185,6 +185,25 @@ systemd-service() {
   fi
 }
 
+dns-degis() {
+  if command -v nmcli &> /dev/null; then
+    aktif_ag=$(nmcli -t -f NAME connection show --active | head -n1)
+    if [ -z "$aktif_ag" ]; then
+        echo "aktif ag bulunamadi..."
+    else
+      nmcli connection modify "$aktif_ag" ipv4.dns "127.0.0.1"
+      nmcli connection modify "$aktif_ag" ipv4.ignore-auto-dns yes
+      echo "${aktif_ag} aginin dns'i 127.0.0.1 olarak ayarlandi."
+      echo "network yeniden baslatiliyor..."
+      nmcli connection down "$aktif_ag" 2>/dev/null
+      sleep 1
+      nmcli connection up "$aktif_ag"
+    fi
+  else
+    echo "networkmanager bulunamadi. dns ayari otomatik olarak yapilamiyor. lutfen manuel bir sekilde dns'inizi 127.0.0.1 olarak ayarlayin."
+  fi
+}
+
 byedpi-setup() {
   echo "byedpi kurulumuna geciliyor..."
 
@@ -206,10 +225,10 @@ dns-none
 resolv-conf
 dnscrypt-config
 byedpi-setup
-# systemd-service
+# dns-degis
+systemd-service
 
-echo "ByeDPI kuruldu. Sisteminizden byedpictl uygulamasini acarak aktiflestirebilirsiniz."
-echo
-echo "ONEMLI: Sisteminizin DNS'ini 127.0.0.1 seklinde ayarlamadiginiz surece bypass calismayacaktir. Sistem ayarlarinizdan bagli oldugunuz agin dns'ini 127.0.0.1 yapmalisiniz."
-echo
-echo "ONEMLI: Kurulum tamamlanmis olsa da sisteminize eklenen byedpictl uygulamasina gidip bir kez byedpi'i baslatmaniz gerekmektedir. Bunu sistem her acildiginda yapmalisiniz. Herkes icin uygun bir cozum bulundugunda otomatik baslatma eklenecektir."
+echo "ByeDPI kuruldu. Sisteminizden byedpictl uygulamasini acarak ilk seferde aktiflestirebilirsiniz."
+if [[ -f /etc/systemd/system/byedpi-start.service ]]; then
+  echo "ONEMLI: Sisteminiz yeniden basladiginda byedpictl otomatik olarak aktiflestirilecektir. Bunu devre disi birakmak istiyorsaniz 'sudo systemctl disable byedpi-start' yazin."
+fi
