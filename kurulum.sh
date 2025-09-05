@@ -218,6 +218,15 @@ byedpi-setup() {
   fi
 }
 
+byedpi-aktiflestir() {
+  if command -v byedpictl &> /dev/null; then
+    echo "byedpictl otomatik olarak baslatiliyor..."
+    sudo byedpictl tun start
+  else
+    echo "byedpictl bulunamadi..."
+  fi
+}
+
 acikla
 paket-yonetici-tanimla
 # iss-check
@@ -229,6 +238,7 @@ dnscrypt-config
 byedpi-setup
 dns-degis
 systemd-service
+byedpi-aktiflestir
 
 echo "ByeDPI kuruldu. Sisteminizden byedpictl uygulamasini acarak ilk seferde aktiflestirebilirsiniz."
 if [[ -f /etc/systemd/system/byedpi-start.service ]]; then
