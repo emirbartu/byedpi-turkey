@@ -68,7 +68,7 @@ if command -v apt &> /dev/null; then
 }
 
 acikla() {
-  echo "Bu kurulum sihirbazi dnscrypt-proxy, "
+  echo "Bu kurulum sihirbazi dnscrypt-proxy ile beraber byedpictl kuracaktir. Betigi kullanmak tamamen sizin sorumlulugunuzdadir."
   echo
   echo
 }
