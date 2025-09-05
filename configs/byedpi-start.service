@@ -1,0 +1,14 @@
+[Unit]
+Description=Start byedpictl service at boot
+After=network.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/byedpictl tun start
+RemainAfterExit=yes
+
+User=root
+Group=root
+
+[Install]
+WantedBy=multi-user.target
