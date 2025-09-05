@@ -86,10 +86,10 @@ iss-check() {
 
   if [[ "$cevap" =~ ^(evet|e)$ ]]; then
     iss="superonline"
-    echo "LOG: Kullanici superonline kullaniyor"
+    echo "kullanici superonline kullaniyor"
   elif [[ "$cevap" =~ ^(hayir|hayır|h)$ ]]; then
     iss="diger"
-    echo "LOG: Kullanici superonline kullanmiyor"
+    echo "kullanici superonline kullanmiyor"
   fi
 }
 
@@ -192,4 +192,7 @@ dnscrypt-config
 byedpi-setup
 
 echo "ByeDPI kuruldu. Sisteminizden byedpictl uygulamasini acarak aktiflestirebilirsiniz."
+echo
+echo
+echo "ONEMLI: Sisteminizin DNS'ini 127.0.0.1 seklinde ayarlamadiginiz surece bypass calismayacaktir. Sistem ayarlarinizdan bagli oldugunuz agin dns'ini 127.0.0.1 yapmalisiniz."
 
