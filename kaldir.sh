@@ -1,0 +1,115 @@
+#!/bin/bash
+
+set -e
+
+makefile="/home/$USER/.local/share/byedpi-turkey/make.sh"
+
+acikla() {
+    echo "Bu betik sisteminizde byedpictl'i kaldirmaniz icin size yardimci olacaktir."
+}
+
+emin-misin() {
+    read -p "byedpictl'i kaldirmak istediginize emin misiniz? (evet/hayir): " emin
+}
+
+byedpictl-kaldir() {
+    if [[ -f $makefile ]]; then
+        echo "byedpictl make dosyasi bulundu. kaldiriliyor..."
+        sudo $makefile remove
+    else
+        echo "${makefile} yolunda olmasi gereken byedpictl make dosyasi bulunamadi. kurulum dosyalari bozulmus gibi gorunuyor..."
+        echo "cikiliyor..."
+        exit 1
+    fi
+}
+
+paket-kaldirilacak-mi() {
+    read -p "dnscrypt-proxy'i kaldirmak istiyor musunuz? (evet/hayir): " paketemin
+}
+
+paket-yonetici-tanimla() {
+  if [[ -f /bin/pacman ]]; then
+    paketyonetici="pacman -S"
+    distro="arch tabanli"
+  fi
+
+  if [[ -f /bin/dnf ]]; then
+    paketyonetici="dnf install"
+    distro="fedora tabanli"
+  fi
+
+  if [[ -f /bin/apt ]]; then
+    paketyonetici="apt install"
+    distro="debian/ubuntu tabanli"
+  fi
+
+  echo "Tespit edilen distro tabani ${distro}"
+  read -p "Bu dogru mu? (evet/hayir): " distrocevap
+
+  distrocevap=$(echo "$distrocevap" | tr '[:upper:]' '[:lower:]')
+
+  while [[ "$distrocevap" != "evet" && "$distrocevap" != "e" && "$distrocevap" != "hayir" && "$distrocevap" != "h" && "$distrocevap" != "hayır" ]]; do
+    echo "Lutfen evet ya da hayir olarak cevaplayin (ya da e/h)."
+    echo "Tespit edilen distro tabani ${distro}"
+    read -p "Bu dogru mu? (evet/hayir): " distrocevap
+    cevap=$(echo "$distrocevap" | tr '[:upper:]' '[:lower:]')
+  done
+
+  if [[ "$distrocevap" =~ ^(hayir|hayır|h)$ ]]; then
+    echo
+    echo
+    echo "Lütfen manuel olarak dağıtım tabanınızı seçiniz."
+    echo
+    echo "1 - Arch Tabanlı (Arch, CachyOS, EndeavourOS, Manjaro vs.)"
+    echo "2 - Fedora Tabanlı (Fedora, Nobara vs.)"
+    echo "3 - Debian/Ubuntu Tabanlı (Ubuntu, Debian, Mint, Zorin vs.)"
+    echo
+
+    read -p "Dağıtımınızın hangi taban olduğunu seçiniz (1/2/3): " manuelcevap
+
+    while [[ ! "$manuelcevap" =~ ^(1|2|3)$ ]]; do
+      echo "Lütfen geçerli bir cevap giriniz (1, 2 veya 3)."
+      read -p "Dağıtımınızın hangi taban olduğunu seçiniz (1/2/3): " manuelcevap
+    done
+
+    if [[ "$manuelcevap" == "1" ]]; then
+      paketyonetici="pacman -R"
+      distro="arch tabanlı"
+    elif [[ "$manuelcevap" == "2" ]]; then
+      paketyonetici="dnf remove"
+      distro="fedora tabanlı"
+    elif [[ "$manuelcevap" == "3" ]]; then
+      paketyonetici="apt remove"
+      distro="debian/ubuntu tabanlı"
+    fi
+
+    echo "${distro} seçildi. Paket kaldirma komutu: '${paketyonetici}' kullanılacak."
+  else
+    echo "Dağıtımınız ${distro} olarak belirlendi. Paket kaldirma komutu: '${paketyonetici}' kullanılacak."
+  fi
+}
+
+acikla
+emin-misin
+
+if [[ $emin =~ ^(evet|e)$ ]]; then
+    byedpictl-kaldir
+    echo "byedpictl basariyla kaldirildi"
+else
+    echo "kullanici evet cevabi vermedi. cikiliyor..."
+    exit 1
+fi
+
+paket-kaldirilacak-mi
+
+if [[ $paketemin =~ ^(evet|e)$ ]]; then
+    paket-yonetici-tanimla
+    echo "secilen paket yoneticisi ile dnscrypt-proxy paketi kaldiriliyor..."
+    sudo ${paketyonetici} dnscrypt-proxy
+    echo "UYARI: zenity paketi baska uygulamalarin da calismasi icin gerekli olabileceginden betik tarafindan kaldirilmayacak."
+    echo "yine de elle kaldirmak isterseniz '${paketyonetici} zenity' komutu kullanarak kaldirabilirsiniz."
+else
+    echo "dnscrypt-proxy kaldirilmayacak"
+fi
+
+echo "betik basariyla tamamlandi"

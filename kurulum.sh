@@ -64,7 +64,7 @@ paket-yonetici-tanimla() {
     echo "${distro} seçildi. Paket yükleme komutu: '${paketyonetici}' kullanılacak."
   else
     echo "Dağıtımınız ${distro} olarak belirlendi. Paket yükleme komutu: '${paketyonetici}' kullanılacak."
-  fi
+  fi  
 }
 
 acikla() {
