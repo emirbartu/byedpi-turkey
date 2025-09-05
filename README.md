@@ -14,7 +14,10 @@ Arkaplanda [dnscrypt-proxy](https://github.com/DNSCrypt/dnscrypt-proxy) ve [byed
 
 Tum dagitimlar icin
 ```
-curl -fsSL https://raw.githubusercontent.com/elrondforwin/byedpi-turkey/refs/heads/master/curl.sh | bash && /home/$USER/.local/share/byedpi-turkey/kurulum.sh
+curl -fsSL https://raw.githubusercontent.com/elrondforwin/byedpi-turkey/refs/heads/master/curl.sh | bash
+```
+```
+cd ~/.local/share/byedpi-turkey && ./kurulum.sh
 ```
 
 # Nasil Kaldirilir?
