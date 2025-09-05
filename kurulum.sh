@@ -2,7 +2,7 @@
 
 set -e
 
-iss=""
+iss="diger"
 DNS_NONE="/etc/NetworkManager/conf.d/90-dns-none.conf"
 
 paket-yonetici-tanimla() {
@@ -72,25 +72,27 @@ acikla() {
   echo
 }
 
-iss-check() {
-  echo
-  read -p "Internet servis saglayiciniz superonline mi? (evet/hayir): " cevap
-  cevap=$(echo "$cevap" | tr '[:upper:]' '[:lower:]')
+# zaten calismadigindan devre disi birakildi.
+#
+# iss-check() {
+#   echo
+#   read -p "Internet servis saglayiciniz superonline mi? (evet/hayir): " cevap
+#   cevap=$(echo "$cevap" | tr '[:upper:]' '[:lower:]')
 
-  while [[ "$cevap" != "evet" && "$cevap" != "e" && "$cevap" != "hayir" && "$cevap" != "h" && "$cevap" != "hayır" ]]; do
-    echo "Lutfen evet ya da hayir olarak cevaplayin (ya da e/h)."
-    read -p "Internet servis saglayiciniz superonline mi? (evet/hayir): " cevap
-    cevap=$(echo "$cevap" | tr '[:upper:]' '[:lower:]')
-  done
+#   while [[ "$cevap" != "evet" && "$cevap" != "e" && "$cevap" != "hayir" && "$cevap" != "h" && "$cevap" != "hayır" ]]; do
+#     echo "Lutfen evet ya da hayir olarak cevaplayin (ya da e/h)."
+#     read -p "Internet servis saglayiciniz superonline mi? (evet/hayir): " cevap
+#     cevap=$(echo "$cevap" | tr '[:upper:]' '[:lower:]')
+#   done
 
-  if [[ "$cevap" =~ ^(evet|e)$ ]]; then
-    iss="superonline"
-    echo "kullanici superonline kullaniyor"
-  elif [[ "$cevap" =~ ^(hayir|hayır|h)$ ]]; then
-    iss="diger"
-    echo "kullanici superonline kullanmiyor"
-  fi
-}
+#   if [[ "$cevap" =~ ^(evet|e)$ ]]; then
+#     iss="superonline"
+#     echo "kullanici superonline kullaniyor"
+#   elif [[ "$cevap" =~ ^(hayir|hayır|h)$ ]]; then
+#     iss="diger"
+#     echo "kullanici superonline kullanmiyor"
+#   fi
+# }
 
 dnscrypt-check() {
   while [[ ! -f /bin/dnscrypt-proxy ]]; do
@@ -218,7 +220,7 @@ byedpi-setup() {
 
 acikla
 paket-yonetici-tanimla
-iss-check
+# iss-check
 dnscrypt-check
 zenity-check
 dns-none
