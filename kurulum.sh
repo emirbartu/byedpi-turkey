@@ -70,7 +70,6 @@ if command -v apt &> /dev/null; then
 acikla() {
   echo "Bu kurulum sihirbazi dnscrypt-proxy ile beraber byedpictl kuracaktir. Betigi kullanmak tamamen sizin sorumlulugunuzdadir."
   echo
-  echo
 }
 
 iss-check() {
@@ -169,6 +168,21 @@ dnscrypt-config() {
   sudo systemctl start dnscrypt-proxy.service
 }
 
+systemd-service() {
+  if [[ $(ps -p 1 -o comm=) == "systemd" ]]; then
+      echo "systemd kullaniliyor."
+      echo "systemd servisi kuruluyor..."
+      sudo cp configs/byedpi-start.service /etc/systemd/system/byedpi-start.service
+      sudo systemctl daemon-reload
+      sudo systemctl enable byedpictl-start.service
+      sudo systemctl start byedpictl-start.service
+      echo
+      echo "sistemin basinda acilmasini saglayan systemd servisini 'sudo systemctl enable/disable byedpictl-start' yazarak kontrol edebilirsiniz"
+  else
+      echo "systemd kullanilmiyor. servis es geciliyor."
+  fi
+}
+
 byedpi-setup() {
   echo "byedpi kurulumuna geciliyor..."
 
@@ -190,9 +204,9 @@ dns-none
 resolv-conf
 dnscrypt-config
 byedpi-setup
+# systemd-service
 
 echo "ByeDPI kuruldu. Sisteminizden byedpictl uygulamasini acarak aktiflestirebilirsiniz."
-echo
 echo
 echo "ONEMLI: Sisteminizin DNS'ini 127.0.0.1 seklinde ayarlamadiginiz surece bypass calismayacaktir. Sistem ayarlarinizdan bagli oldugunuz agin dns'ini 127.0.0.1 yapmalisiniz."
 echo
