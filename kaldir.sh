@@ -1,7 +1,5 @@
 #!/bin/bash
 
-set -e
-
 makefile="/home/$USER/.local/share/byedpi-turkey/make.sh"
 
 acikla() {
@@ -102,9 +100,11 @@ if [[ $emin =~ ^(evet|e)$ ]]; then
     byedpictl-kaldir
     echo "byedpictl basariyla kaldirildi"
     if [[ $(ps -p 1 -o comm=) == "systemd" ]]; then
-      echo "systemd tespit edildi. servis siliniyor..."
-      sudo systemctl disable byedpi-start.service
-      sudo rm -rf /etc/systemd/system/byedpi-start.service
+      if [[ -f /etc/systemd/system/byedpi-start.service ]]; then
+        echo "systemd tespit edildi. servis siliniyor..."
+        sudo systemctl disable byedpi-start.service
+        sudo rm -rf /etc/systemd/system/byedpi-start.service
+      fi
     fi
 else
     echo "kullanici evet cevabi vermedi. cikiliyor..."
