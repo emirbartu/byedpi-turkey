@@ -180,7 +180,7 @@ systemd-service() {
       sudo systemctl enable byedpi-start.service
       sudo systemctl start byedpi-start.service
       echo
-      echo "sistemin basinda acilmasini saglayan systemd servisini 'sudo systemctl enable/disable byedpictl-start' yazarak kontrol edebilirsiniz"
+      echo "sistemin basinda acilmasini saglayan systemd servisini 'sudo systemctl enable/disable byedpi-start' yazarak kontrol edebilirsiniz"
   else
       echo "systemd kullanilmiyor. servis es geciliyor."
   fi
