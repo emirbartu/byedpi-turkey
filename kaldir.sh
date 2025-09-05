@@ -15,8 +15,10 @@ emin-misin() {
 byedpictl-kaldir() {
     if [[ -f $makefile ]]; then
         echo "byedpictl make dosyasi bulundu."
-        echo "byedpictl durduruluyor"
-        byedpictl tun stop
+        if byedpictl tun status | grep -q "tunnel: running"; then
+            echo "byedpictl mevcutta calisir durumda. durduruluyor..."
+            byedpictl tun stop
+        fi    
         echo "byedpictl kaldiriliyor"
         sudo $makefile remove
     else
