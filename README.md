@@ -47,5 +47,7 @@ byedpictl zenity # grafik arayuzunu acar
 # Atıflar
 
 https://www.youtube.com/watch?v=i5RUTG67aoM - Bana bu yöntemi öğreten kurulum rehberi
+
 https://github.com/cagritaskn/GoodbyeDPI-Turkey - İlham
+
 https://github.com/maximilionus/byedpictl - Orijinal Proje
