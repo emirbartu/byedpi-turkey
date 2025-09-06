@@ -120,9 +120,6 @@ http3 = false
 ## solution is to reach out to these operators and encourage them to
 ## fix their servers to correctly advertise HTTP/3 support.
 
-http3_probe = false
-
-
 ## SOCKS proxy
 ## Uncomment the following line to route all TCP connections to a local Tor node
 ## Tor doesn't support UDP, so set `force_tcp` to `true` as well. When passing
@@ -946,59 +943,6 @@ skip_incompatible = false
 ## IMPORTANT: Default resolvers listed below support Well-Known Prefix 64:ff9b::/96 only.
 
 # resolver = ['[2606:4700:4700::64]:53', '[2001:4860:4860::64]:53']
-
-
-###############################################################################
-#                            Monitoring UI                                     #
-###############################################################################
-
-[monitoring_ui]
-
-## Enable the monitoring UI
-enabled = false
-
-## Listen address for the monitoring UI
-listen_address = "127.0.0.1:8080"
-
-## Optional username and password for basic authentication
-## To disable authentication, set username to an empty string: username = ""
-## If both username and password are empty, no authentication is required
-username = "admin"
-password = "changeme"
-
-## Optional TLS certificate and key for HTTPS
-## If both are empty, HTTP will be used
-tls_certificate = ""
-tls_key = ""
-
-## Enable query logging in the monitoring UI
-## This will show recent queries in the UI
-enable_query_log = true
-
-## Privacy level for the monitoring UI
-## 0: show all details including client IPs
-## 1: anonymize client IPs (default)
-## 2: aggregate data only (no individual queries or domains shown)
-privacy_level = 1
-
-## Maximum number of recent query log entries to keep in memory
-## Helps control memory usage on high-traffic servers
-## Default: 100
-# max_query_log_entries = 100
-
-## Maximum memory usage in MB for recent query logs
-## Automatic cleanup when limit is exceeded
-## Default: 1
-# max_memory_mb = 1
-
-## Enable Prometheus metrics endpoint
-## Default: false
-# prometheus_enabled = false
-
-## Path for Prometheus metrics endpoint
-## Default: /metrics
-# prometheus_path = "/metrics"
-
 
 ###############################################################################
 #                            Static entries                                    #
