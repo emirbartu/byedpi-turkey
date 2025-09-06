@@ -26,8 +26,6 @@ bash ~/.local/share/byedpi-turkey/kaldir.sh
 ```
 Eger kaldirma scripti duzgun calismazsa ``~/.local/share/byedpi-turkey`` yoluna gidip ``sudo ./make.sh remove`` calistirarak byedpictl'i kaldirabilirsiniz.
 
-isterseniz dnscrypt proxy'i de dagitimizin paket yoneticisinden kaldirabilirsiniz.
-
 # Muhtemel Sorunlar / Sorular
 
 - Sisteminizin interneti giderse bir defa byedpictl'den yeniden baslatmak sorunu cozecektir. Bazen tunnel calisirken server cokebiliyor. Bunu ``sudo byedpictl tun status`` yazarak kontrol edebilirsiniz.
