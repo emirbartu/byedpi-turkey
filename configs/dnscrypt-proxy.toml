@@ -71,7 +71,7 @@ dnscrypt_servers = true
 doh_servers = true
 
 # Use servers implementing the Oblivious DoH protocol
-odoh_servers = false
+# odoh_servers = false
 
 
 ## Require servers defined by remote sources to satisfy specific properties
@@ -106,7 +106,7 @@ force_tcp = false
 ## Note that, like DNSCrypt but unlike other HTTP versions, this uses
 ## UDP and (usually) port 443 instead of TCP.
 
-http3 = false
+# http3 = false
 
 ## When http3 is true, always try HTTP/3 first for DoH servers.
 ## If the HTTP/3 connection fails, fallback to HTTP/2 and don't try
@@ -329,7 +329,7 @@ cert_refresh_delay = 240
 ## not be sent there. If you're using DNSCrypt or Anonymized DNS and your
 ## lists are up to date, these resolvers will not even be used.
 
-bootstrap_resolvers = ['9.9.9.11:53', '8.8.8.8:53']
+# bootstrap_resolvers = ['9.9.9.11:53', '8.8.8.8:53']
 
 
 ## When internal DNS resolution is required, for example to retrieve
