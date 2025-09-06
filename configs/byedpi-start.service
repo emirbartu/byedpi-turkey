@@ -4,7 +4,6 @@ After=network-online.target
 
 [Service]
 Type=oneshot
-ExecStartPre=/usr/bin/systemctl is-system-running --wait
 ExecStart=/usr/local/bin/byedpictl tun start
 RemainAfterExit=yes
 
