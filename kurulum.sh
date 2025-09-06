@@ -67,6 +67,13 @@ if command -v apt &> /dev/null; then
   fi  
 }
 
+ubuntu-check() {
+    if [[ "$paketyonetici" == "apt install" ]]; then
+        echo "Ubuntu destegi yapilan testler sonucunda kaldirilmistir. Ubuntu icin yeni bir script eklenecektir."
+        exit 1
+    fi
+}
+
 acikla() {
   echo "Bu kurulum sihirbazi dnscrypt-proxy ile beraber byedpictl kuracaktir. Betigi kullanmak tamamen sizin sorumlulugunuzdadir."
   echo
@@ -229,6 +236,7 @@ byedpi-aktiflestir() {
 
 acikla
 paket-yonetici-tanimla
+ubuntu-check
 # iss-check
 dnscrypt-check
 zenity-check
