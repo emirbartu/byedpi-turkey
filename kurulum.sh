@@ -102,14 +102,14 @@ dnscrypt-check() {
     sudo ${paketyonetici} dnscrypt-proxy
     sleep 2
     echo "dnscrypt-proxy tekrar kontrol ediliyor..."
-    if command -v dnscrypt-proxy; then
+    if command -v dnscrypt-proxy &> /dev/null; then
       echo "Kontrol basarili. Devam ediliyor."
     else
       echo "Kontrol basarisiz. Tekrar deneniyor..."
     fi
   done
 
-  if command -v dnscrypt-proxy; then
+  if command -v dnscrypt-proxy &> /dev/null; then
     echo "dnscrypt-proxy tespit edildi. Devam ediliyor."
   else
     echo "dnscrypt kurulumunda bir sorun var gibi gorunuyor..."
@@ -118,19 +118,19 @@ dnscrypt-check() {
 }
 
 zenity-check() {
-  while ! command -v zenity; do
+  while ! command -v zenity &> /dev/null; do
     echo "Sistemde zenity tespit edilemedi. Paket yoneticinizle kurulum yapiliyor."
     echo "Lutfen sudo sifresi istenirse girin."
     echo ""
     sudo ${paketyonetici} zenity
-    if command -v zenity; then
+    if command -v zenity &> /dev/null; then
       echo "Kontrol basarili. Devam ediliyor."
     else
       echo "Kontrol basarisiz. Tekrar deneniyor..."
     fi
   done
 
-  if command -v zenity; then
+  if command -v zenity &> /dev/null; then
     echo "zenity tespit edildi. Devam ediliyor."
   else
     echo "zenity kurulumunda bir sorun var gibi gorunuyor..."
