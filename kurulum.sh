@@ -95,21 +95,21 @@ acikla() {
 # }
 
 dnscrypt-check() {
-  while [[ ! -f /bin/dnscrypt-proxy ]]; do
+  while ! command -v dnscrypt-proxy &> /dev/null; do
     echo "Sistemde dnscrypt-proxy tespit edilemedi. Paket yoneticinizle kurulum yapiliyor."
     echo "Lutfen sudo sifresi istenirse girin."
     echo ""
     sudo ${paketyonetici} dnscrypt-proxy
     sleep 2
     echo "dnscrypt-proxy tekrar kontrol ediliyor..."
-    if [[ -f /bin/dnscrypt-proxy ]]; then
+    if command -v dnscrypt-proxy; then
       echo "Kontrol basarili. Devam ediliyor."
     else
       echo "Kontrol basarisiz. Tekrar deneniyor..."
     fi
   done
 
-  if [[ -f /bin/dnscrypt-proxy ]]; then
+  if command -v dnscrypt-proxy; then
     echo "dnscrypt-proxy tespit edildi. Devam ediliyor."
   else
     echo "dnscrypt kurulumunda bir sorun var gibi gorunuyor..."
@@ -118,19 +118,19 @@ dnscrypt-check() {
 }
 
 zenity-check() {
-  while [[ ! -f /bin/zenity ]]; do
+  while ! command -v zenity; do
     echo "Sistemde zenity tespit edilemedi. Paket yoneticinizle kurulum yapiliyor."
     echo "Lutfen sudo sifresi istenirse girin."
     echo ""
     sudo ${paketyonetici} zenity
-    if [[ -f /bin/zenity ]]; then
+    if command -v zenity; then
       echo "Kontrol basarili. Devam ediliyor."
     else
       echo "Kontrol basarisiz. Tekrar deneniyor..."
     fi
   done
 
-  if [[ -f /bin/zenity ]]; then
+  if command -v zenity; then
     echo "zenity tespit edildi. Devam ediliyor."
   else
     echo "zenity kurulumunda bir sorun var gibi gorunuyor..."
