@@ -28,7 +28,7 @@ if [[ -d "$BYEDPI_DIR" ]]; then
     rm -rf "$BYEDPI_DIR"
 fi
 
-git clone https://github.com/emirbartu/byedpi-turkey.git "$BYEDPI_DIR"
+git clone https://github.com/elrondforwin/byedpi-turkey.git "$BYEDPI_DIR"
 
 if [[ $? -eq 0 ]]; then
     echo "byedpi-turkey başarıyla klonlandı. Lütfen devam etmek için sonraki komutu yapıştırın."
