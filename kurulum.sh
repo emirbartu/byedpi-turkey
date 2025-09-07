@@ -79,27 +79,65 @@ acikla() {
   echo
 }
 
-# zaten calismadigindan devre disi birakildi.
-#
-# iss-check() {
-#   echo
-#   read -p "Internet servis saglayiciniz superonline mi? (evet/hayir): " cevap
-#   cevap=$(echo "$cevap" | tr '[:upper:]' '[:lower:]')
+# ISS profili seçimi
+iss-check() {
+  echo
+  echo "Lütfen internet servis sağlayıcınızı seçin:"
+  echo
+  echo "1 - Superonline"
+  echo "2 - Turkcell"
+  echo "3 - Vodafone"
+  echo "4 - TTNet"
+  echo "5 - Diğer/Genel Ayarlar"
+  echo
+  read -p "ISS seçiminiz (1-5): " iss_secim
+  
+  while [[ ! "$iss_secim" =~ ^[1-5]$ ]]; do
+    echo "Lütfen geçerli bir seçim yapın (1-5)."
+    read -p "ISS seçiminiz (1-5): " iss_secim
+  done
+  
+  case "$iss_secim" in
+    1)
+      iss="superonline"
+      echo "Superonline profili seçildi."
+      ;;
+    2)
+      iss="turknet"
+      echo "TurkNet profili seçildi."
+      ;;
+    3)
+      iss="vodafone"
+      echo "Vodafone profili seçildi."
+      ;;
+    4)
+      iss="turktelekom"
+      echo "Turk Telekom profili seçildi."
+      ;;
+    5)
+      iss="diger"
+      echo "Genel ayarlar seçildi."
+      ;;
+  esac
+  
+  echo "Seçiminizi değiştirmek isterseniz kurulum sonrasında /etc/byedpictl/desync.conf dosyasını düzenleyebilirsiniz."
+  echo
+}
 
-#   while [[ "$cevap" != "evet" && "$cevap" != "e" && "$cevap" != "hayir" && "$cevap" != "h" && "$cevap" != "hayır" ]]; do
-#     echo "Lutfen evet ya da hayir olarak cevaplayin (ya da e/h)."
-#     read -p "Internet servis saglayiciniz superonline mi? (evet/hayir): " cevap
-#     cevap=$(echo "$cevap" | tr '[:upper:]' '[:lower:]')
-#   done
-
-#   if [[ "$cevap" =~ ^(evet|e)$ ]]; then
-#     iss="superonline"
-#     echo "kullanici superonline kullaniyor"
-#   elif [[ "$cevap" =~ ^(hayir|hayır|h)$ ]]; then
-#     iss="diger"
-#     echo "kullanici superonline kullanmiyor"
-#   fi
-# }
+# ISS profiline göre desync.conf kopyalama fonksiyonu
+iss-profil-uygula() {
+  local profil_dosyasi="isp_profiles/$iss/desync.conf"
+  local hedef_dosya="src/conf/desync.conf"
+  
+  if [[ -f "$profil_dosyasi" ]]; then
+    echo "ISS profili uygulanıyor: $iss"
+    cp "$profil_dosyasi" "$hedef_dosya"
+    echo "Profil başarıyla uygulandı."
+  else
+    echo "UYARI: $profil_dosyasi bulunamadı. Varsayılan ayarlar kullanılacak."
+    echo "Lütfen kurulum sonrasında /etc/byedpictl/desync.conf dosyasını manuel olarak düzenleyin."
+  fi
+}
 
 dnscrypt-check() {
   while ! command -v dnscrypt-proxy &> /dev/null; do
