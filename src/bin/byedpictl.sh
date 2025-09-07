@@ -245,7 +245,7 @@ change_isp() {
   fi
 
   # Apply the selected ISP profile
-  local profil_dosyasi="/opt/byedpi/isp_profiles/$iss/desync.conf"
+  local profil_dosyasi="/etc/byedpictl/profiles/$iss/desync.conf"
   local hedef_dosya="$CONF_DIR/desync.conf"
 
   if [[ -f "$profil_dosyasi" ]]; then

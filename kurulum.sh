@@ -252,15 +252,8 @@ dns-degis() {
 }
 
 byedpi-setup() {
-  echo "byedpi kurulumuna geciliyor..."
-
-  if [ "$iss" = "superonline" ]; then
-    echo "byedpictl superonline kurulum scripti calistiriliyor..."
-    sudo bash make-superonline.sh install
-  elif [ "$iss" = "diger" ]; then
-    echo "byedpictl kurulum scripti calistiriliyor..."
+  echo "byedpictl kurulum scripti calistiriliyor..."
     sudo bash make.sh install
-  fi
 }
 
 byedpi-aktiflestir() {
