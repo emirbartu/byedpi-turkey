@@ -14,9 +14,12 @@ cmd_help() {
 $0
 
 COMMANDS:
-    tun <start|stop|restart|status>
+    tun <start|stop|restart|status|change [isp]>
         Control and monitor the background routing to tunnel all traffic
         through the byedpi proxy.
+        For the "change" command, you can specify an ISP profile directly:
+        superonline, turknet, vodafone, turktelekom, or diger.
+        If no ISP is specified, you will be prompted interactively.
     zenity
         Start in GUI mode.
     help
@@ -39,6 +42,9 @@ cmd_tun() {
   status)
     show_tunneling_status
     ;;
+  change)
+    change_isp $2
+    ;;
   *)
     echo "Invalid argument!"
     ;;
@@ -48,7 +54,7 @@ cmd_tun() {
 cmd_zenity() {
   cmd=$(
     zenity --list --title="$NAME" --hide-header --column="0" \
-      "ByeDPI'i Baslat" "ByeDPI'i Durdur" "ByeDPI'i Yeniden Baslat"
+      "ByeDPI'i Baslat" "ByeDPI'i Durdur" "ByeDPI'i Yeniden Baslat" "Profili Degistir"
   )
 
   reply=""
@@ -165,6 +171,98 @@ server: $server_status
 tunnel: $tun_status
 EOF
 }
+
+change_isp() {
+  # Check if tunnel is running and stop it temporarily
+  local was_running=false
+  if [[ -f $PID_DIR/tunnel.pid ]]; then
+    was_running=true
+  fi
+
+  # Stop tunneling if running
+  if [[ "$was_running" == true ]]; then
+    stop_tunneling
+  fi
+
+  local iss=""
+  
+  # If ISP provided as argument, use it directly
+  if [[ -n "$1" ]]; then
+    case "$1" in
+      superonline|turknet|vodafone|turktelekom|diger)
+        iss="$1"
+        echo "$iss profili seçildi."
+        ;;
+      *)
+        echo "Geçersiz ISP profili: $1"
+        echo "Geçerli profiller: superonline, turknet, vodafone, turktelekom, diger"
+        if [[ "$was_running" == true ]]; then
+          start_tunneling
+        fi
+        exit 1
+        ;;
+    esac
+  else
+    # Prompt user to select ISP
+    echo
+    echo "Lütfen internet servis sağlayıcınızı seçin:"
+    echo
+    echo "1 - Superonline"
+    echo "2 - Turkcell"
+    echo "3 - Vodafone"
+    echo "4 - TTNet"
+    echo "5 - Diğer/Genel Ayarlar"
+    echo
+    read -p "ISS seçiminiz (1-5): " iss_secim
+
+    while [[ ! "$iss_secim" =~ ^[1-5]$ ]]; do
+      echo "Lütfen geçerli bir seçim yapın (1-5)."
+      read -p "ISS seçiminiz (1-5): " iss_secim
+    done
+
+    case "$iss_secim" in
+      1)
+        iss="superonline"
+        echo "Superonline profili seçildi."
+        ;;
+      2)
+        iss="turknet"
+        echo "TurkNet profili seçildi."
+        ;;
+      3)
+        iss="vodafone"
+        echo "Vodafone profili seçildi."
+        ;;
+      4)
+        iss="turktelekom"
+        echo "Turk Telekom profili seçildi."
+        ;;
+      5)
+        iss="diger"
+        echo "Genel ayarlar seçildi."
+        ;;
+    esac
+  fi
+
+  # Apply the selected ISP profile
+  local profil_dosyasi="/opt/byedpi/isp_profiles/$iss/desync.conf"
+  local hedef_dosya="$CONF_DIR/desync.conf"
+
+  if [[ -f "$profil_dosyasi" ]]; then
+    echo "ISS profili uygulanıyor: $iss"
+    sudo cp "$profil_dosyasi" "$hedef_dosya"
+    echo "Profil başarıyla uygulandı."
+  else
+    echo "UYARI: $profil_dosyasi bulunamadı. Varsayılan ayarlar kullanılacak."
+    echo "Lütfen /etc/byedpictl/desync.conf dosyasını manuel olarak düzenleyin."
+  fi
+
+  # Restart tunneling if it was running
+  if [[ "$was_running" == true ]]; then
+    start_tunneling
+  fi
+}
+
 
 case $1 in
 help)
