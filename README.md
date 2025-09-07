@@ -28,6 +28,8 @@ Eger kaldirma scripti duzgun calismazsa ``~/.local/share/byedpi-turkey`` yoluna 
 
 # Muhtemel Sorunlar / Sorular
 
+- login.microsoftonline.com gibi spesifik siteler kullanilan yontem nedeniyle yuklenmeyebiliyor. Bu durumda uygulama uzerinden gecici olarak byedpi'i durdurup, login isleminizi bitirip tekrar acabilirsiniz. Yeni bir cozum bulundugunda bu satir kaldirilacaktir.
+
 - Byedpictl grafik arayuzu uygulamalasi acilmiyorsa dagitiminizin paket yoneticisinden ``zenity`` paketini indirmelisiniz. Betik bunu otomatik olarak kuruyor fakat kurulmadigi senaryoda bu sorunu cozecektir. (Ornek: ``sudo dnf install zenity``)
 
 - Sisteminizin interneti giderse bir defa byedpictl'den yeniden baslatmak sorunu cozecektir. Bazen tunnel calisirken server cokebiliyor. Bunu ``sudo byedpictl tun status`` yazarak kontrol edebilirsiniz.
