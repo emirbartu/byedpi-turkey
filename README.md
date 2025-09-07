@@ -28,6 +28,8 @@ Eger kaldirma scripti duzgun calismazsa ``~/.local/share/byedpi-turkey`` yoluna 
 
 # Muhtemel Sorunlar / Sorular
 
+- Byedpictl grafik arayuzu uygulamalasi acilmiyorsa dagitiminizin paket yoneticisinden ``zenity`` paketini indirmelisiniz. Betik bunu otomatik olarak kuruyor fakat kurulmadigi senaryoda bu sorunu cozecektir. (Ornek: ``sudo dnf install zenity``)
+
 - Sisteminizin interneti giderse bir defa byedpictl'den yeniden baslatmak sorunu cozecektir. Bazen tunnel calisirken server cokebiliyor. Bunu ``sudo byedpictl tun status`` yazarak kontrol edebilirsiniz.
 
 - Tunelleme, sistem uykudan kalktiktan sonra bozulabilir. Uygulama uzerinden bir defa yeniden baslatmak sorunu cozer.
