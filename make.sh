@@ -63,6 +63,16 @@ cmd_install () {
     cp "$SRC_BIN/byedpictl.sh" "$BIN/byedpictl"
     cp -r "$SRC_CONF"/* "$CONF"
 
+    # ISS profillerini sistem dizinine kopyala
+    printf "${C_BOLD}- Installing ISP profiles${C_RESET}\n"
+    if [[ -d "isp_profiles" ]]; then
+        mkdir -p "$CONF/profiles"
+        cp -r isp_profiles/* "$CONF/profiles/"
+        echo "ISS profilleri $CONF/profiles/ dizinine kopyalandı"
+    else
+        echo "UYARI: isp_profiles klasörü bulunamadı"
+    fi
+
     printf "${C_BOLD}- Installing the desktop integration${C_RESET}\n"
     xdg-desktop-menu install --novendor "$SRC_XDG/byedpictl.desktop"
     xdg-icon-resource install --novendor --size 128 "$SRC_ICON/128/byedpictl.png"
@@ -75,6 +85,9 @@ Get basic usage information by executing
 
 DPI desync parameters can be changed here
   $CONF/desync.conf
+
+ISP profiles are available at
+  $CONF/profiles/
 EOF
 }
 
