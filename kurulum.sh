@@ -275,7 +275,8 @@ byedpi-aktiflestir() {
 acikla
 paket-yonetici-tanimla
 ubuntu-check
-# iss-check
+iss-check
+iss-profil-uygula
 dnscrypt-check
 zenity-check
 dns-none
