@@ -60,7 +60,6 @@ sudo ./make.sh remove
 
 | Sorun | Çözüm |
 | --- | --- |
-| login.microsoftonline.com gibi bazı siteler açılmıyor. | Geçici olarak byedpi’yi durdurun, giriş yaptıktan sonra tekrar başlatın. |
 | Byedpictl grafik arayüzü açılmıyor. | `zenity` paketini kurun. Örn: `sudo dnf install zenity`. |
 | İnternet bağlantısı gidiyor. | `byedpictl` üzerinden yeniden başlatın. Gerekirse `sudo byedpictl tun status` ile durumu kontrol edin. |
 | Sistem uyku modundan dönünce tünel bozuluyor. | Uygulama üzerinden yeniden başlatın. |
