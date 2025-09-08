@@ -38,7 +38,7 @@ fi
     echo "Lutfen evet ya da hayir olarak cevaplayin (ya da e/h)."
     echo "Tespit edilen distro tabani ${distro}"
     read -p "Bu dogru mu? (evet/hayir): " distrocevap
-    cevap=$(echo "$distrocevap" | tr '[:upper:]' '[:lower:]')
+    distrocevap=$(echo "$distrocevap" | tr '[:upper:]' '[:lower:]')
   done
 
   if [[ "$distrocevap" =~ ^(hayir|hayır|h)$ ]]; then
