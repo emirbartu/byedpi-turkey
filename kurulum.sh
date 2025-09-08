@@ -21,7 +21,7 @@ if command -v apt &> /dev/null; then
     distro="debian/ubuntu tabanli"
 fi
 
-if [ ! command -v pacman &> /dev/null && ! command -v dnf &> /dev/null && ! command -v apt &> /dev/null ]; then
+if ! command -v pacman &> /dev/null && ! command -v dnf &> /dev/null && ! command -v apt &> /dev/null; then
     echo "desteklenen paket yoneticileri arasinda paket yoneticiniz yok"
     echo "desteklenenler:"
     echo "    pacman"
