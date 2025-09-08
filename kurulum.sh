@@ -19,7 +19,15 @@ if command -v dnf &> /dev/null; then
 if command -v apt &> /dev/null; then
     paketyonetici="apt install"
     distro="debian/ubuntu tabanli"
-  fi
+fi
+
+if [ ! command -v pacman &> /dev/null && ! command -v dnf &> /dev/null && ! command -v apt &> /dev/null ]; then
+    echo "desteklenen paket yoneticileri arasinda paket yoneticiniz yok"
+    echo "desteklenenler:"
+    echo "    pacman"
+    echo "    dnf"
+    exit 1
+fi
 
   echo "Tespit edilen distro tabani ${distro}"
   read -p "Bu dogru mu? (evet/hayir): " distrocevap
