@@ -91,7 +91,7 @@ byedpictl tun start
 byedpictl tun stop
 byedpictl tun restart
 byedpictl tun status
-byedpictl tun change
+byedpictl tun change [profil-ismi]
 byedpictl zenity # grafik arayuzunu acar
 ```
 
