@@ -86,9 +86,20 @@ byedpictl help
 byedpictl tun start
 byedpictl tun stop
 byedpictl tun restart
+byedpictl tun change [profil-ismi] # profil değiştirir
 byedpictl tun status
 
 byedpictl zenity   # grafik arayüzü açar
+```
+
+## Yeni Profil Ekleme
+
+Yeni profiller eklemek için `/etc/byedpictl/profiles/` dizinine `.conf` uzantılı dosyalar ekleyebilirsiniz. Her profil dosyası aşağıdaki formatta olmalıdır:
+
+```bash
+CIADPI_DESYNC=(
+    "--param1=value1" "--param2=value2" #...
+)
 ```
 
 ---

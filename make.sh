@@ -63,6 +63,16 @@ cmd_install () {
     cp "$SRC_BIN/byedpictl.sh" "$BIN/byedpictl"
     cp -r "$SRC_CONF"/* "$CONF"
 
+    # Profilleri sistem dizinine kopyala
+    printf "${C_BOLD}- Installing profiles${C_RESET}\n"
+    if [[ -d "profiles" ]]; then
+        mkdir -p "$CONF/profiles"
+        cp profiles/*.conf "$CONF/profiles/"
+        echo "Profiller $CONF/profiles/ dizinine kopyalandı"
+    else
+        echo "UYARI: profiles klasörü bulunamadı"
+    fi
+
     printf "${C_BOLD}- Installing the desktop integration${C_RESET}\n"
     xdg-desktop-menu install --novendor "$SRC_XDG/byedpictl.desktop"
     xdg-icon-resource install --novendor --size 128 "$SRC_ICON/128/byedpictl.png"
@@ -75,6 +85,9 @@ Get basic usage information by executing
 
 DPI desync parameters can be changed here
   $CONF/desync.conf
+
+Profiles are available at
+  $CONF/profiles/
 EOF
 }
 
