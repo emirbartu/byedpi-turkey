@@ -19,7 +19,15 @@ if command -v dnf &> /dev/null; then
 if command -v apt &> /dev/null; then
     paketyonetici="apt install"
     distro="debian/ubuntu tabanli"
-  fi
+fi
+
+if ! command -v pacman &> /dev/null && ! command -v dnf &> /dev/null && ! command -v apt &> /dev/null; then
+    echo "desteklenen paket yoneticileri arasinda paket yoneticiniz yok"
+    echo "desteklenenler:"
+    echo "    pacman"
+    echo "    dnf"
+    exit 1
+fi
 
   echo "Tespit edilen distro tabani ${distro}"
   read -p "Bu dogru mu? (evet/hayir): " distrocevap
@@ -30,7 +38,7 @@ if command -v apt &> /dev/null; then
     echo "Lutfen evet ya da hayir olarak cevaplayin (ya da e/h)."
     echo "Tespit edilen distro tabani ${distro}"
     read -p "Bu dogru mu? (evet/hayir): " distrocevap
-    cevap=$(echo "$distrocevap" | tr '[:upper:]' '[:lower:]')
+    distrocevap=$(echo "$distrocevap" | tr '[:upper:]' '[:lower:]')
   done
 
   if [[ "$distrocevap" =~ ^(hayir|hayır|h)$ ]]; then
