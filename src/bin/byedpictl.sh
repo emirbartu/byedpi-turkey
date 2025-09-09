@@ -14,12 +14,11 @@ cmd_help() {
 $0
 
 COMMANDS:
-    tun <start|stop|restart|status|change [isp]>
+    tun <start|stop|restart|status|change [profile-name]>
         Control and monitor the background routing to tunnel all traffic
         through the byedpi proxy.
-        For the "change" command, you can specify an ISP profile directly:
-        superonline, turknet, vodafone, turktelekom, or diger.
-        If no ISP is specified, you will be prompted interactively.
+        For the "change" command, you can specify a profile name directly.
+        If no profile is specified, you will be prompted interactively.
     zenity
         Start in GUI mode.
     help
@@ -43,7 +42,7 @@ cmd_tun() {
     show_tunneling_status
     ;;
   change)
-    change_isp $2
+    change_profile $2
     ;;
   *)
     echo "Invalid argument!"
@@ -172,7 +171,7 @@ tunnel: $tun_status
 EOF
 }
 
-change_isp() {
+change_profile() {
   # Check if tunnel is running and stop it temporarily
   local was_running=false
   if [[ -f $PID_DIR/tunnel.pid ]]; then
@@ -184,76 +183,87 @@ change_isp() {
     stop_tunneling
   fi
 
-  local iss=""
+  local profile=""
   
-  # If ISP provided as argument, use it directly
+  # If profile provided as argument, use it directly
   if [[ -n "$1" ]]; then
-    case "$1" in
-      superonline|turknet|vodafone|turktelekom|diger)
-        iss="$1"
-        echo "$iss profili seçildi."
-        ;;
-      *)
-        echo "Geçersiz ISP profili: $1"
-        echo "Geçerli profiller: superonline, turknet, vodafone, turktelekom, diger"
-        if [[ "$was_running" == true ]]; then
-          start_tunneling
-        fi
-        exit 1
-        ;;
-    esac
+    # Convert argument to match file naming (replace spaces with dashes, lowercase)
+    profile=$(echo "$1" | tr ' ' '-' | tr '[:upper:]' '[:lower:]')
+    local profile_file="/etc/byedpictl/profiles/${profile}.conf"
+    
+    if [[ -f "$profile_file" ]]; then
+      echo "$profile profili seçildi."
+    else
+      echo "Geçersiz profil: $1"
+      echo "Geçerli profiller için 'byedpictl tun change' komutunu argümansız çalıştırın."
+      if [[ "$was_running" == true ]]; then
+        start_tunneling
+      fi
+      exit 1
+    fi
   else
-    # Prompt user to select ISP
+    # Prompt user to select profile dynamically
     echo
-    echo "Lütfen internet servis sağlayıcınızı seçin:"
+    echo "Mevcut profiller:"
     echo
-    echo "1 - Superonline"
-    echo "2 - Turkcell"
-    echo "3 - Vodafone"
-    echo "4 - TTNet"
-    echo "5 - Diğer/Genel Ayarlar"
-    echo
-    read -p "ISS seçiminiz (1-5): " iss_secim
+    
+    # List profiles dynamically
+    local profiles_dir="/etc/byedpictl/profiles"
+    local profile_files=()
+    local profile_names=()
+    local counter=1
+    
+    if [[ -d "$profiles_dir" ]]; then
+      for profile_file in "$profiles_dir"/*.conf; do
+        if [[ -f "$profile_file" ]]; then
+          profile_files+=("$profile_file")
+          profile_name=$(basename "$profile_file" .conf)
+          profile_names+=("$profile_name")
+          echo "$counter - $profile_name"
+          
+          # Show profile info
+          name=$(grep -E "^# Profile Name:" "$profile_file" | sed 's/^# Profile Name: *//' | sed 's/^#* *//' | xargs)
+          description=$(grep -E "^# Description:" "$profile_file" | sed 's/^# Description: *//' | sed 's/^#* *//' | xargs)
+          
+          if [[ -n "$name" ]]; then
+            echo "    İsim: $name"
+          fi
+          if [[ -n "$description" ]]; then
+            echo "    Açıklama: $description"
+          fi
+          echo
+          ((counter++))
+        fi
+      done
+    else
+      echo "Profil dizini bulunamadı: $profiles_dir"
+      if [[ "$was_running" == true ]]; then
+        start_tunneling
+      fi
+      exit 1
+    fi
+    
+    read -p "Profil seçiminiz (1-$(( ${#profile_files[@]} ))): " profile_secim
 
-    while [[ ! "$iss_secim" =~ ^[1-5]$ ]]; do
-      echo "Lütfen geçerli bir seçim yapın (1-5)."
-      read -p "ISS seçiminiz (1-5): " iss_secim
+    while [[ ! "$profile_secim" =~ ^[0-9]+$ ]] || [[ "$profile_secim" -lt 1 ]] || [[ "$profile_secim" -gt "${#profile_files[@]}" ]]; do
+      echo "Lütfen geçerli bir seçim yapın (1-$(( ${#profile_files[@]} )))."
+      read -p "Profil seçiminiz (1-$(( ${#profile_files[@]} ))): " profile_secim
     done
-
-    case "$iss_secim" in
-      1)
-        iss="superonline"
-        echo "Superonline profili seçildi."
-        ;;
-      2)
-        iss="turknet"
-        echo "TurkNet profili seçildi."
-        ;;
-      3)
-        iss="vodafone"
-        echo "Vodafone profili seçildi."
-        ;;
-      4)
-        iss="turktelekom"
-        echo "Turk Telekom profili seçildi."
-        ;;
-      5)
-        iss="diger"
-        echo "Genel ayarlar seçildi."
-        ;;
-    esac
+    
+    profile="${profile_names[$((profile_secim-1))]}"
+    echo "${profile_names[$((profile_secim-1))]} profili seçildi."
   fi
 
-  # Apply the selected ISP profile
-  local profil_dosyasi="/etc/byedpictl/profiles/$iss/desync.conf"
-  local hedef_dosya="$CONF_DIR/desync.conf"
+  # Apply the selected profile
+  local profile_file="/etc/byedpictl/profiles/${profile}.conf"
+  local target_file="$CONF_DIR/desync.conf"
 
-  if [[ -f "$profil_dosyasi" ]]; then
-    echo "ISS profili uygulanıyor: $iss"
-    sudo cp "$profil_dosyasi" "$hedef_dosya"
+  if [[ -f "$profile_file" ]]; then
+    echo "Profil uygulanıyor: $profile"
+    sudo cp "$profile_file" "$target_file"
     echo "Profil başarıyla uygulandı."
   else
-    echo "UYARI: $profil_dosyasi bulunamadı. Varsayılan ayarlar kullanılacak."
+    echo "UYARI: $profile_file bulunamadı. Varsayılan ayarlar kullanılacak."
     echo "Lütfen /etc/byedpictl/desync.conf dosyasını manuel olarak düzenleyin."
   fi
 

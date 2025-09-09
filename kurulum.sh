@@ -2,7 +2,7 @@
 
 set -e
 
-iss="diger"
+selected_profile="varsayilan-profil"
 DNS_NONE="/etc/NetworkManager/conf.d/90-dns-none.conf"
 
 paket-yonetici-tanimla() {
@@ -87,58 +87,72 @@ acikla() {
   echo
 }
 
-# ISS profili seçimi
-iss-check() {
+# Profil seçimi
+profil-sec() {
   echo
-  echo "Lütfen internet servis sağlayıcınızı seçin:"
+  echo "Mevcut profiller:"
   echo
-  echo "1 - Superonline"
-  echo "2 - Turkcell"
-  echo "3 - Vodafone"
-  echo "4 - TTNet"
-  echo "5 - Diğer/Genel Ayarlar"
-  echo
-  read -p "ISS seçiminiz (1-5): " iss_secim
   
-  while [[ ! "$iss_secim" =~ ^[1-5]$ ]]; do
-    echo "Lütfen geçerli bir seçim yapın (1-5)."
-    read -p "ISS seçiminiz (1-5): " iss_secim
+  # List profiles dynamically
+  profile_files=(profiles/*.conf)
+  profile_names=()
+  
+  for i in "${!profile_files[@]}"; do
+    profile_file="${profile_files[$i]}"
+    if [[ -f "$profile_file" ]]; then
+      profile_name=$(basename "$profile_file" .conf)
+      profile_names+=("$profile_name")
+      echo "$((i+1)) - $profile_name"
+      
+      # Show profile info
+      name=$(grep -E "^# Profile Name:" "$profile_file" | sed 's/^# Profile Name: *//' | sed 's/^#* *//' | xargs)
+      description=$(grep -E "^# Description:" "$profile_file" | sed 's/^# Description: *//' | sed 's/^#* *//' | xargs)
+      
+      if [[ -n "$name" ]]; then
+        echo "    İsim: $name"
+      fi
+      if [[ -n "$description" ]]; then
+        echo "    Açıklama: $description"
+      fi
+      echo
+    fi
   done
   
-  case "$iss_secim" in
-    1)
-      iss="superonline"
-      echo "Superonline profili seçildi."
-      ;;
-    2)
-      iss="turknet"
-      echo "TurkNet profili seçildi."
-      ;;
-    3)
-      iss="vodafone"
-      echo "Vodafone profili seçildi."
-      ;;
-    4)
-      iss="turktelekom"
-      echo "Turk Telekom profili seçildi."
-      ;;
-    5)
-      iss="diger"
-      echo "Genel ayarlar seçildi."
-      ;;
-  esac
+  echo "$((${#profile_files[@]}+1)) - Manuel ayar (kurulum sonrası /etc/byedpictl/desync.conf dosyasını düzenleyin)"
+  echo
   
-  echo "Seçiminizi değiştirmek isterseniz kurulum sonrasında /etc/byedpictl/desync.conf dosyasını düzenleyebilirsiniz."
+  read -p "Profil seçiminiz (1-$(( ${#profile_files[@]}+1 ))): " profil_secim
+  
+  while [[ ! "$profil_secim" =~ ^[0-9]+$ ]] || [[ "$profil_secim" -lt 1 ]] || [[ "$profil_secim" -gt $((${#profile_files[@]}+1)) ]]; do
+    echo "Lütfen geçerli bir seçim yapın (1-$(( ${#profile_files[@]}+1 )))."
+    read -p "Profil seçiminiz (1-$(( ${#profile_files[@]}+1 ))): " profil_secim
+  done
+  
+  if [[ "$profil_secim" -le "${#profile_files[@]}" ]]; then
+    selected_profile="${profile_names[$((profil_secim-1))]}"
+    echo "${profile_names[$((profil_secim-1))]} profili seçildi."
+  else
+    selected_profile="manuel"
+    echo "Manuel ayar seçildi. Kurulum sonrasında /etc/byedpictl/desync.conf dosyasını düzenleyebilirsiniz."
+  fi
+  
   echo
 }
 
-# ISS profiline göre desync.conf kopyalama fonksiyonu
-iss-profil-uygula() {
-  local profil_dosyasi="isp_profiles/$iss/desync.conf"
+# Profile uygulama fonksiyonu
+profil-uygula() {
+  if [[ "$selected_profile" == "manuel" ]]; then
+    echo "Manuel ayar seçildi. Varsayılan profil uygulanıyor..."
+    cp "profiles/varsayilan-profil.conf" "src/conf/desync.conf"
+    echo "Varsayılan profil başarıyla uygulandı."
+    return
+  fi
+  
+  local profil_dosyasi="profiles/${selected_profile}.conf"
   local hedef_dosya="src/conf/desync.conf"
   
   if [[ -f "$profil_dosyasi" ]]; then
-    echo "ISS profili uygulanıyor: $iss"
+    echo "Profil uygulanıyor: $selected_profile"
     cp "$profil_dosyasi" "$hedef_dosya"
     echo "Profil başarıyla uygulandı."
   else
@@ -276,8 +290,8 @@ byedpi-aktiflestir() {
 acikla
 paket-yonetici-tanimla
 ubuntu-check
-iss-check
-iss-profil-uygula
+profil-sec
+profil-uygula
 dnscrypt-check
 zenity-check
 dns-none

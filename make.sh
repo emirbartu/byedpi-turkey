@@ -63,14 +63,14 @@ cmd_install () {
     cp "$SRC_BIN/byedpictl.sh" "$BIN/byedpictl"
     cp -r "$SRC_CONF"/* "$CONF"
 
-    # ISS profillerini sistem dizinine kopyala
-    printf "${C_BOLD}- Installing ISP profiles${C_RESET}\n"
-    if [[ -d "isp_profiles" ]]; then
+    # Profilleri sistem dizinine kopyala
+    printf "${C_BOLD}- Installing profiles${C_RESET}\n"
+    if [[ -d "profiles" ]]; then
         mkdir -p "$CONF/profiles"
-        cp -r isp_profiles/* "$CONF/profiles/"
-        echo "ISS profilleri $CONF/profiles/ dizinine kopyalandı"
+        cp profiles/*.conf "$CONF/profiles/"
+        echo "Profiller $CONF/profiles/ dizinine kopyalandı"
     else
-        echo "UYARI: isp_profiles klasörü bulunamadı"
+        echo "UYARI: profiles klasörü bulunamadı"
     fi
 
     printf "${C_BOLD}- Installing the desktop integration${C_RESET}\n"
@@ -86,7 +86,7 @@ Get basic usage information by executing
 DPI desync parameters can be changed here
   $CONF/desync.conf
 
-ISP profiles are available at
+Profiles are available at
   $CONF/profiles/
 EOF
 }

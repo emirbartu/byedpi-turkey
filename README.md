@@ -10,20 +10,6 @@ Kullanici dostu, Linux icin GoodbyeDPI-Turkey alternatifi.
 
 Arkaplanda [dnscrypt-proxy](https://github.com/DNSCrypt/dnscrypt-proxy) ve [byedpictl](https://github.com/maximilionus/byedpictl) kullanir, byedpictl dolayisi ile [byedpi](https://github.com/hufrea/byedpi) ve [hev-socks5-tunnel](https://github.com/heiher/hev-socks5-tunnel) de kullanilir.
 
-<<<<<<< HEAD
-# Kurulum
-
-Fedora ve Arch
-```
-curl -fsSL https://raw.githubusercontent.com/elrondforwin/byedpi-turkey/refs/heads/master/curl.sh | bash
-```
-```
-cd ~/.local/share/byedpi-turkey && ./kurulum.sh
-```
-
-# Nasil Kaldirilir?
-```
-=======
 ### 🐧 **Test Edilen Ortamlar**  
 | Ortam       | Durum                          |
 |-------------|--------------------------------|
@@ -48,8 +34,8 @@ Bu uygulamanın kullanımından doğan her türlü yasal sorumluluk kullanan ki�
 ## 📌 Notlar
 
 * **Ubuntu/Debian desteği (6 Eylül itibariyle) kaldırılmıştır.**
-  Bunun sebebi, `dnscrypt-proxy`’nin apt ile gelen sürümünün Fedora ve Arch'a kıyasla farklı çalışmasıdır.
-* Her türlü **Pull Request**’e açığım.
+  Bunun sebebi, `dnscrypt-proxy`'nin apt ile gelen sürümünün Fedora ve Arch'a kıyasla farklı çalışmasıdır.
+* Her türlü **Pull Request**'e açığım.
 
 ---
 
@@ -68,10 +54,23 @@ cd ~/.local/share/byedpi-turkey && ./kurulum.sh
 ## 🗑️ Kaldırma
 Daha önce klonlanmış konumdan ``kaldir.sh`` betiğini çalıştırın.
 ```bash
->>>>>>> upstream/master
 bash ~/.local/share/byedpi-turkey/kaldir.sh
 ```
 Eger kaldirma scripti duzgun calismazsa ``~/.local/share/byedpi-turkey`` yoluna gidip ``sudo ./make.sh remove`` calistirarak byedpictl'i kaldirabilirsiniz.
+
+# Profil Sistemi
+
+Bu sürümde, farklı parametrelere sahip profil sistemi uygulanmıştır. Artık kullanıcılar farklı DPI bypass ayarlarını profiller olarak kaydedebilir ve kolayca aralarında geçiş yapabilirler.
+
+## Yeni Profil Ekleme
+
+Yeni profiller eklemek için `/etc/byedpictl/profiles/` dizinine `.conf` uzantılı dosyalar ekleyebilirsiniz. Her profil dosyası aşağıdaki formatta olmalıdır:
+
+```bash
+CIADPI_DESYNC=(
+    "--param1=value1" "--param2=value2" #...
+)
+```
 
 # Muhtemel Sorunlar / Sorular
 
@@ -87,27 +86,6 @@ Eger kaldirma scripti duzgun calismazsa ``~/.local/share/byedpi-turkey`` yoluna 
 
 - ``byedpictl``'in tum komutlari kullanilabilir.
 ```
-<<<<<<< HEAD
-=======
-
----
-
-## ❓ Sık Karşılaşılan Sorunlar
-
-| Sorun | Çözüm |
-| --- | --- |
-| Byedpictl grafik arayüzü açılmıyor. | `zenity` paketini kurun. Örn: `sudo dnf install zenity`. |
-| İnternet bağlantısı gidiyor. | `byedpictl` üzerinden yeniden başlatın. Gerekirse `sudo byedpictl tun status` ile durumu kontrol edin. |
-| Sistem uyku modundan dönünce tünel bozuluyor. | Uygulama üzerinden yeniden başlatın. |
-
----
-
-## 🖥️ Komut Satırı Kullanımı
-
-`byedpictl` komutlarının tamamını kullanabilirsiniz:
-
-```bash
->>>>>>> upstream/master
 byedpictl help
 byedpictl tun start
 byedpictl tun stop
