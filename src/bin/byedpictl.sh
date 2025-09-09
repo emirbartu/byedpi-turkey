@@ -53,7 +53,7 @@ cmd_tun() {
 cmd_zenity() {
   cmd=$(
     zenity --list --title="$NAME" --hide-header --column="0" \
-      "ByeDPI'i Baslat" "ByeDPI'i Durdur" "ByeDPI'i Yeniden Baslat" "Profili Degistir"
+      "ByeDPI'i Baslat" "ByeDPI'i Durdur" "ByeDPI'i Yeniden Baslat" "Profili Değiştir"
   )
 
   reply=""
@@ -67,10 +67,43 @@ cmd_zenity() {
   "ByeDPI'i Yeniden Baslat")
     reply=$(pkexec "$0" tun restart) || true
     ;;
+  "Profili Değiştir")
+    # Get list of available profiles
+    local profiles_dir="/etc/$NAME/profiles"
+    local profile_list=""
+    
+    if [[ -d "$profiles_dir" ]]; then
+      for profile_file in "$profiles_dir"/*.conf; do
+        if [[ -f "$profile_file" ]]; then
+          profile_name=$(basename "$profile_file" .conf)
+          if [[ -z "$profile_list" ]]; then
+            profile_list="$profile_name"
+          else
+            profile_list="$profile_list|$profile_name"
+          fi
+        fi
+      done
+    fi
+    
+    if [[ -n "$profile_list" ]]; then
+      selected_profile=$(
+        zenity --list --title="Profil Seç" --text="Bir profil seçin:" \
+          --column="Profiller" $(echo "$profile_list" | tr '|' '
+')
+      )
+      
+      if [[ -n "$selected_profile" ]]; then
+        reply=$(pkexec "$0" tun change "$selected_profile") || true
+      fi
+    else
+      reply="Hata: Hiç profil bulunamadı!"
+    fi
+    ;;
   esac
 
   zenity --notification --title "$NAME" \
-    --text="$NAME\n$reply"
+    --text="$NAME
+$reply"
 }
 
 prepare_dirs() {
@@ -172,43 +205,38 @@ EOF
 }
 
 change_profile() {
-  # Check if tunnel is running and stop it temporarily
   local was_running=false
   if [[ -f $PID_DIR/tunnel.pid ]]; then
     was_running=true
   fi
 
-  # Stop tunneling if running
   if [[ "$was_running" == true ]]; then
     stop_tunneling
   fi
 
   local profile=""
   
-  # If profile provided as argument, use it directly
   if [[ -n "$1" ]]; then
-    # Convert argument to match file naming (replace spaces with dashes, lowercase)
     profile=$(echo "$1" | tr ' ' '-' | tr '[:upper:]' '[:lower:]')
-    local profile_file="/etc/byedpictl/profiles/${profile}.conf"
+    local profile_file="$CONF_DIR/profiles/${profile}.conf"
     
     if [[ -f "$profile_file" ]]; then
       echo "$profile profili seçildi."
     else
-      echo "Geçersiz profil: $1"
-      echo "Geçerli profiller için 'byedpictl tun change' komutunu argümansız çalıştırın."
+      echo "Hata: '$1' profili bulunamadı!"
+      echo "Mevcut profiller:"
+      ls "$CONF_DIR/profiles/"*.conf 2>/dev/null | xargs -n 1 basename | sed 's/\.conf$//'
       if [[ "$was_running" == true ]]; then
         start_tunneling
       fi
       exit 1
     fi
   else
-    # Prompt user to select profile dynamically
     echo
     echo "Mevcut profiller:"
     echo
     
-    # List profiles dynamically
-    local profiles_dir="/etc/byedpictl/profiles"
+    local profiles_dir="$CONF_DIR/profiles"
     local profile_files=()
     local profile_names=()
     local counter=1
@@ -221,9 +249,9 @@ change_profile() {
           profile_names+=("$profile_name")
           echo "$counter - $profile_name"
           
-          # Show profile info
-          name=$(grep -E "^# Profile Name:" "$profile_file" | sed 's/^# Profile Name: *//' | sed 's/^#* *//' | xargs)
-          description=$(grep -E "^# Description:" "$profile_file" | sed 's/^# Description: *//' | sed 's/^#* *//' | xargs)
+          local name description
+          name=$(grep -E "^# Profile Name:" "$profile_file" 2>/dev/null | sed 's/^# Profile Name: *//' | xargs || echo "")
+          description=$(grep -E "^# Description:" "$profile_file" 2>/dev/null | sed 's/^# Description: *//' | xargs || echo "")
           
           if [[ -n "$name" ]]; then
             echo "    İsim: $name"
@@ -236,43 +264,52 @@ change_profile() {
         fi
       done
     else
-      echo "Profil dizini bulunamadı: $profiles_dir"
+      echo "Hata: Profil dizini bulunamadı: $profiles_dir"
       if [[ "$was_running" == true ]]; then
         start_tunneling
       fi
       exit 1
     fi
     
-    read -p "Profil seçiminiz (1-$(( ${#profile_files[@]} ))): " profile_secim
+    if [[ ${#profile_files[@]} -eq 0 ]]; then
+      echo "Hata: Hiç profil bulunamadı!"
+      if [[ "$was_running" == true ]]; then
+        start_tunneling
+      fi
+      exit 1
+    fi
+    
+    read -p "Profil seçiminiz (1-${#profile_files[@]}): " profile_secim
 
     while [[ ! "$profile_secim" =~ ^[0-9]+$ ]] || [[ "$profile_secim" -lt 1 ]] || [[ "$profile_secim" -gt "${#profile_files[@]}" ]]; do
-      echo "Lütfen geçerli bir seçim yapın (1-$(( ${#profile_files[@]} )))."
-      read -p "Profil seçiminiz (1-$(( ${#profile_files[@]} ))): " profile_secim
+      echo "Lütfen geçerli bir seçim yapın (1-${#profile_files[@]})."
+      read -p "Profil seçiminiz (1-${#profile_files[@]}): " profile_secim
     done
     
     profile="${profile_names[$((profile_secim-1))]}"
     echo "${profile_names[$((profile_secim-1))]} profili seçildi."
   fi
 
-  # Apply the selected profile
-  local profile_file="/etc/byedpictl/profiles/${profile}.conf"
+  local profile_file="$CONF_DIR/profiles/${profile}.conf"
   local target_file="$CONF_DIR/desync.conf"
 
   if [[ -f "$profile_file" ]]; then
     echo "Profil uygulanıyor: $profile"
-    sudo cp "$profile_file" "$target_file"
-    echo "Profil başarıyla uygulandı."
+    cp "$profile_file" "$target_file"
+    echo "Profil başarıyla uygulandı: $profile"
   else
-    echo "UYARI: $profile_file bulunamadı. Varsayılan ayarlar kullanılacak."
-    echo "Lütfen /etc/byedpictl/desync.conf dosyasını manuel olarak düzenleyin."
+    echo "HATA: $profile_file bulunamadı!"
+    if [[ "$was_running" == true ]]; then
+      start_tunneling
+    fi
+    exit 1
   fi
 
-  # Restart tunneling if it was running
   if [[ "$was_running" == true ]]; then
+    echo "Tunnel yeniden başlatılıyor..."
     start_tunneling
   fi
 }
-
 
 case $1 in
 help)

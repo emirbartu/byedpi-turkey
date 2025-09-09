@@ -1,7 +1,8 @@
 #!/bin/bash
 
 set -e
-
+sudo pkill -f hev-socks5-tunnel
+echo Tünel Boşaltıldı
 selected_profile="varsayilan-profil"
 DNS_NONE="/etc/NetworkManager/conf.d/90-dns-none.conf"
 
@@ -87,15 +88,25 @@ acikla() {
   echo
 }
 
-# Profil seçimi
 profil-sec() {
   echo
   echo "Mevcut profiller:"
   echo
   
-  # List profiles dynamically
-  profile_files=(profiles/*.conf)
-  profile_names=()
+  local profile_files=()
+  local profile_names=()
+  
+  if [[ -d "profiles" ]] && [[ -n "$(ls profiles/*.conf 2>/dev/null)" ]]; then
+    profile_files=(profiles/*.conf)
+  fi
+  
+  if [[ ${#profile_files[@]} -eq 0 ]]; then
+    echo "1 - Varsayılan profil (profiles klasörü bulunamadı, varsayılan profil kullanılacak)"
+    echo
+    echo "UYARI: profiles/ klasöründe .conf dosyası bulunamadı. Varsayılan profil kullanılacak."
+    selected_profile="varsayilan"
+    return
+  fi
   
   for i in "${!profile_files[@]}"; do
     profile_file="${profile_files[$i]}"
@@ -104,9 +115,9 @@ profil-sec() {
       profile_names+=("$profile_name")
       echo "$((i+1)) - $profile_name"
       
-      # Show profile info
-      name=$(grep -E "^# Profile Name:" "$profile_file" | sed 's/^# Profile Name: *//' | sed 's/^#* *//' | xargs)
-      description=$(grep -E "^# Description:" "$profile_file" | sed 's/^# Description: *//' | sed 's/^#* *//' | xargs)
+      local name description
+      name=$(grep -E "^# Profile Name:" "$profile_file" 2>/dev/null | sed 's/^# Profile Name: *//' | xargs || echo "")
+      description=$(grep -E "^# Description:" "$profile_file" 2>/dev/null | sed 's/^# Description: *//' | xargs || echo "")
       
       if [[ -n "$name" ]]; then
         echo "    İsim: $name"
@@ -121,11 +132,11 @@ profil-sec() {
   echo "$((${#profile_files[@]}+1)) - Manuel ayar (kurulum sonrası /etc/byedpictl/desync.conf dosyasını düzenleyin)"
   echo
   
-  read -p "Profil seçiminiz (1-$(( ${#profile_files[@]}+1 ))): " profil_secim
+  read -p "Profil seçiminiz (1-$((${#profile_files[@]}+1))): " profil_secim
   
   while [[ ! "$profil_secim" =~ ^[0-9]+$ ]] || [[ "$profil_secim" -lt 1 ]] || [[ "$profil_secim" -gt $((${#profile_files[@]}+1)) ]]; do
-    echo "Lütfen geçerli bir seçim yapın (1-$(( ${#profile_files[@]}+1 )))."
-    read -p "Profil seçiminiz (1-$(( ${#profile_files[@]}+1 ))): " profil_secim
+    echo "Lütfen geçerli bir seçim yapın (1-$((${#profile_files[@]}+1)))."
+    read -p "Profil seçiminiz (1-$((${#profile_files[@]}+1))): " profil_secim
   done
   
   if [[ "$profil_secim" -le "${#profile_files[@]}" ]]; then
@@ -139,12 +150,32 @@ profil-sec() {
   echo
 }
 
-# Profile uygulama fonksiyonu
 profil-uygula() {
+  if [[ ! -d "profiles" ]] || [[ -z "$(ls profiles/*.conf 2>/dev/null)" ]] || [[ "$selected_profile" == "varsayilan" ]]; then
+    echo "Varsayılan profil uygulanıyor..."
+    
+    cat > "src/conf/desync.conf" <<'EOF'
+CIADPI_DESYNC=(
+    "--tlsrec=1+s"
+)
+EOF
+    echo "Varsayılan profil başarıyla uygulandı."
+    return
+  fi
+  
   if [[ "$selected_profile" == "manuel" ]]; then
     echo "Manuel ayar seçildi. Varsayılan profil uygulanıyor..."
-    cp "profiles/varsayilan-profil.conf" "src/conf/desync.conf"
-    echo "Varsayılan profil başarıyla uygulandı."
+    if [[ -f "profiles/varsayilan-profil.conf" ]]; then
+      cp "profiles/varsayilan-profil.conf" "src/conf/desync.conf"
+      echo "Varsayılan profil başarıyla uygulandı."
+    else
+      cat > "src/conf/desync.conf" <<'EOF'
+CIADPI_DESYNC=(
+    "--tlsrec=1+s"
+)
+EOF
+      echo "Varsayılan profil başarıyla oluşturuldu ve uygulandı."
+    fi
     return
   fi
   
@@ -154,10 +185,19 @@ profil-uygula() {
   if [[ -f "$profil_dosyasi" ]]; then
     echo "Profil uygulanıyor: $selected_profile"
     cp "$profil_dosyasi" "$hedef_dosya"
-    echo "Profil başarıyla uygulandı."
+    echo "Profil başarıyla uygulandı: $selected_profile"
   else
-    echo "UYARI: $profil_dosyasi bulunamadı. Varsayılan ayarlar kullanılacak."
-    echo "Lütfen kurulum sonrasında /etc/byedpictl/desync.conf dosyasını manuel olarak düzenleyin."
+    echo "HATA: $profil_dosyasi bulunamadı!"
+    echo "Mevcut profiller:"
+    ls profiles/*.conf 2>/dev/null | xargs -n 1 basename | sed 's/\.conf$//' || echo "Hiç profil bulunamadı!"
+    
+    echo "Varsayılan profil uygulanıyor..."
+    cat > "src/conf/desync.conf" <<'EOF'
+CIADPI_DESYNC=(
+    "--tlsrec=1+s"
+)
+EOF
+    echo "Varsayılan profil başarıyla uygulandı."
   fi
 }
 
