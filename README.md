@@ -19,10 +19,10 @@ Arkaplanda aşağıdaki araçları kullanır:
 | Ubuntu      | Çalışmıyor ❌, Destek eklenecek |
 
 ### 📡 **Test Edilen ISS'ler**  
-| Sağlayıcı    | Durum       |
-|--------------|-------------|
-| Türk Telekom | Çalışıyor ✅|
-| SuperOnline  | Çalışıyor ✅|
+| Sağlayıcı    | Profil       | Durum |
+|--------------|-------------|--------------|
+| Türk Telekom | ``varsayilan-profil`` | Çalışıyor ✅
+| SuperOnline  | ``varsayilan-profil`` | Çalışıyor ✅
 
 ---
 
