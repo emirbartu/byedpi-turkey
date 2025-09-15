@@ -19,10 +19,10 @@ Arkaplanda aşağıdaki araçları kullanır:
 | Ubuntu      | Çalışmıyor ❌, Destek eklenecek |
 
 ### 📡 **Test Edilen ISS'ler**  
-| Sağlayıcı    | Durum       |
-|--------------|-------------|
-| Türk Telekom | Çalışıyor ✅|
-| SuperOnline  | Çalışıyor ✅|
+| Sağlayıcı    | Profil       | Durum |
+|--------------|-------------|--------------|
+| Türk Telekom | ``varsayilan-profil`` | Çalışıyor ✅
+| SuperOnline  | ``varsayilan-profil`` | Çalışıyor ✅
 
 ---
 
@@ -74,6 +74,7 @@ sudo ./make.sh remove
 | Byedpictl grafik arayüzü açılmıyor. | `zenity` paketini kurun. Örn: `sudo dnf install zenity`. |
 | İnternet bağlantısı gidiyor. | `byedpictl` üzerinden yeniden başlatın. Gerekirse `sudo byedpictl tun status` ile durumu kontrol edin. |
 | Sistem uyku modundan dönünce tünel bozuluyor. | Uygulama üzerinden yeniden başlatın. |
+| Kurulum başarılı ancak çalışmıyor. | Bunun birden fazla sebebi olabilir, en yaygın problem NetworkManager kullanılmaması oluyor. Omarchy gibi bazı hazır Arch kurulumlarında NetworkManager yerine ``systemd-networkd`` kullanılıyor, bu durumda elinizle NetworkManager kurup aktifleştirmeniz ya da ``systemd-resolved`` kullanarak DNS'inizi ``127.0.0.1`` olarak ayarlamanız beklenir. Nasıl yapacağınızı bilmiyorsanız issue açarak yardım alabilirsiniz. |
 
 ---
 
